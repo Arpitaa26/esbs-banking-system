@@ -1,0 +1,41 @@
+<div class="modal fade show d-block align-items-center justify-content-center" tabindex="-1" role="dialog"
+    *ngIf="visible" (click)="handleBackdropClick()">
+    <div class="modal-dialog modal-dialog-centered" role="document" (click)="$event.stopPropagation()">
+        <div class="modal-content">
+            <div class="modal-header ps-3 py-3 bg-custom" *ngIf="options.title || options.subTitle"
+                [ngStyle]="{ 'background-color': options.headerColor, 'color': options.headerTextColor || 'white' }">
+                <!-- <h5 class="modal-title">
+                    <div *ngIf="options.title">{{ options.title }}</div>
+                    <small *ngIf="options.subTitle" class="text-muted">{{ options.subTitle }}</small>
+                </h5> -->
+                <button type="button" class="btn-close text-light" (click)="close('cancel')"></button>
+            </div>
+
+            <div class="modal-body"
+                [ngStyle]="{ 'background-color': options.bodyColor, 'color': options.bodyTextColor || '#212529' }">
+                <h5 class="modal-title">
+                    <div *ngIf="options.title">{{ options.title }}</div>
+                    <small *ngIf="options.subTitle" class="text-muted">{{ options.subTitle }}</small>
+                </h5>
+                <p *ngIf="options.message">{{ options.message }}</p>
+                <div *ngFor="let input of options.inputs" class="mb-3">
+                    <label *ngIf="input.label" class="form-label">{{ input.label }}</label>
+                    <input *ngIf="input.type !== 'textarea'" class="form-control" [type]="input.type || 'text'"
+                        [placeholder]="input.placeholder || ''" [value]="input.value || ''"
+                        (input)="handleInputEvent(input.name, $event)" />
+                    <textarea *ngIf="input.type === 'textarea'" class="form-control"
+                        [placeholder]="input.placeholder || ''" [value]="input.value || ''"
+                        (input)="handleInputEvent(input.name, $event)"></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer py-1" *ngIf="options.buttons?.length"
+                [ngStyle]="{'background-color': options.footerColor,'color': options.footerTextColor || '#212529'}">
+                <button *ngFor="let btn of options.buttons" type="button" class="btn btn-sm px-3"
+                    [ngClass]="getButtonClasses(btn)" (click)="handleClick(btn)">
+                    {{ getButtonText(btn) }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

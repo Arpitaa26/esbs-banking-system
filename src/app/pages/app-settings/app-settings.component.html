@@ -1,0 +1,25 @@
+<segment [segbuttons]="branchSegButtons" [segmentTab]="currentTab1" (segbuttonClicked)="onBranchSegClick($event)"
+  class="mt-2"></segment>
+<segment [segbuttons]="newsBlogSegButtons" [segmentTab]="currentTab2" (segbuttonClicked)="onNewsBlogSegClick($event)"
+  *ngIf="currentTab1==='new_blog_social'"></segment>
+<segment [segbuttons]="termsSegButtons" (segbuttonClicked)="onTermsSegClick($event)" *ngIf="currentTab1==='t&c'">
+</segment>
+<table [options]="branchOptions" *ngIf="currentTab1==='branches'"></table>
+<table [options]="importantInfoOptions" *ngIf="currentTab1==='new_blog_social' && currentTab2==='active'"
+  (pageChange)="onPageChange($event,2)" (sortChange)="onSortChange($event,2)" (searchFilter)="onSearchFilter($event,2)">
+</table>
+<table [options]="importantInfoOptions" *ngIf="currentTab1==='new_blog_social' && currentTab2==='archive'"
+  (pageChange)="onPageChange($event,2)" (sortChange)="onSortChange($event,2)" (searchFilter)="onSearchFilter($event,2)">
+</table>
+<table [options]="smsOptions" *ngIf="currentTab1==='sms'" (pageChange)="onPageChange($event,1)"
+  (sortChange)="onSortChange($event,1)" (searchFilter)="onSearchFilter($event,1)"></table>
+<div class="row m-1 p-1" [hidden]="currentTab1 !== 't&c'">
+  <div class="col px-4 pb-4">
+    <div class="card p-2 rounded-3">
+      <div class="d-flex justify-content-end mb-2">
+        <button class="update-btn" (click)="saveTermsAndCondition()">Save Changes</button>
+      </div>
+      <div id="editor-container"></div>
+    </div>
+  </div>
+</div>

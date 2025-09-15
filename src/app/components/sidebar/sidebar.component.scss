@@ -1,0 +1,139 @@
+.sidebar {
+  width: 100%;
+  min-height: 100vh;
+  background: #041643;
+  color: #fff;
+  top: 0;
+  left: 0;
+  z-index: 1030;
+  overflow-y: auto;
+
+  .nav-link {
+    padding: 15px 21px;
+    transition: 0.05s;
+    color: var(--Ink-Light, #afafaf);
+    margin-left: 22px;
+
+    span {
+      font-family: Caros;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+    }
+  }
+}
+
+.side-menu {
+  overflow-y: scroll;
+  height: 600px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+ul.nav>li.nav-item>a {
+  position: relative;
+  cursor: pointer;
+}
+
+ul.nav>li.nav-item>a::after {
+  content: '';
+  width: 6px;
+  top: 0;
+  bottom: 0;
+  left: -22px;
+  position: absolute;
+  border-radius: 0px 15px 15px 0px;
+  background: #d9d9d900;
+}
+
+ul.nav>li.nav-item>.section-header:hover::after {
+  background: #D9D9D9;
+}
+
+ul.nav>li.nav-item>a.section-active::after {
+  background: #D9D9D9;
+}
+
+.nested-menu {
+  position: relative;
+  margin-left: 20px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .nav-item {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      width: 15px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-50%);
+    }
+
+    &:last-child::after {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      bottom: -10px;
+      width: 1px;
+      background: #041643;
+    }
+
+    .nav-link {
+      margin-left: 35px;
+      padding-left: 10px;
+
+      &::after {
+        left: -35px;
+      }
+    }
+  }
+}
+
+.section-header {
+  font-weight: 500;
+  position: relative;
+
+  .chevron {
+    transition: transform 0.3s ease;
+  }
+}
+
+.submenu-active {
+  font-weight: bold;
+  font-size: 14px;
+  color: red;
+}
+
+.section-header:hover,
+.section-active {
+  border-radius: 8px 0px 0px 8px;
+  background: #fff;
+  margin-left: 22px;
+  color: var(--Ink-Darkest, #252424) !important;
+  font-family: Caros;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: bold;
+}
+
+ul li .active span:nth-of-type(2) {
+  font-weight: bolder;
+}

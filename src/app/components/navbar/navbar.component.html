@@ -1,0 +1,37 @@
+<div class="navbar-comp align-items-center justify-content-center">
+  <nav class="navbar-container d-flex justify-content-between align-items-center px-4 py-3">
+    <!-- Left Side -->
+    <div class="d-flex align-items-center gap-3">
+      <div class="back-btn d-flex align-items-center justify-content-center"></div>
+      <h5 class="mb-0 nav-head-txt">{{ pageTitle }}</h5>
+    </div>
+
+    <!-- Right Side -->
+    <div class="d-flex align-items-center gap-4">
+      <div class="notification-icon" (click)="clickNotifications()">
+        <span class="noti-icon" [class.blink]="blink">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M18.3922 4.39325C17.6394 4.13793 16.8344 4 16 4C12.2046 4 9.01619 6.85376 8.59706 10.6259L8.26132 13.6475L8.25272 13.7244C8.08079 15.2227 7.59311 16.6673 6.82187 17.9633L6.78215 18.0296L6.01143 19.3141C5.31203 20.4799 4.96232 21.0627 5.03782 21.5412C5.08806 21.8595 5.25191 22.1489 5.49906 22.3557C5.87048 22.6667 6.55019 22.6667 7.90958 22.6667H24.0904C25.4497 22.6667 26.1294 22.6667 26.5008 22.3557C26.748 22.1489 26.9118 21.8595 26.9621 21.5412C27.0376 21.0627 26.6878 20.4799 25.9885 19.3141L25.2177 18.0296L25.178 17.9633C24.5697 16.9412 24.1378 15.8264 23.8981 14.6659C20.2632 14.6115 17.3333 11.6479 17.3333 8C17.3333 6.67108 17.7221 5.43297 18.3922 4.39325ZM21.6988 6.65177C22.6144 7.73843 23.2272 9.09513 23.3997 10.5989C22.216 10.3266 21.3333 9.26639 21.3333 8C21.3333 7.50812 21.4665 7.04735 21.6988 6.65177Z"
+              fill="black" />
+            <path
+              d="M12 22.6667C12 23.192 12.1035 23.7121 12.3045 24.1975C12.5055 24.6827 12.8001 25.1236 13.1716 25.4951C13.5431 25.8665 13.984 26.1612 14.4692 26.3621C14.9545 26.5632 15.4747 26.6667 16 26.6667C16.5253 26.6667 17.0455 26.5632 17.5308 26.3621C18.016 26.1612 18.4569 25.8665 18.8284 25.4951C19.1999 25.1236 19.4945 24.6827 19.6955 24.1975C19.8965 23.7121 20 23.192 20 22.6667H16H12Z"
+              fill="black" />
+            <path
+              d="M24 11.3333C25.8409 11.3333 27.3333 9.84095 27.3333 8C27.3333 6.15905 25.8409 4.66667 24 4.66667C22.159 4.66667 20.6666 6.15905 20.6666 8C20.6666 9.84095 22.159 11.3333 24 11.3333Z"
+              fill="black" stroke="black" />
+          </svg>
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <div class="text-end">
+          <div class="user-namme">{{userName}}</div>
+          <small class="profile">Admin</small>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>
+<app-notification-card *ngIf="showCard" [notifications]="notifications"
+  (notificationClicked)="handleNotificationClick($event)" (close)="showCard = false"></app-notification-card>

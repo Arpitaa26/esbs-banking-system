@@ -1,0 +1,63 @@
+
+<div  class="mb-4 ms-4 text-md-start text-center mt-4 ">
+ <h2 class="text">{{ customerInfo?.fullname }}</h2>
+  <p class="text"><b>Phoebus Reference Number: {{ customerInfo?.memberid }}</b></p>
+    <div class="card  ms-4">
+    <div class="row g-3 ">
+      <div class="col-md-6">
+        <label class="form-label">Audit trails ID</label>
+        <input type="text" class="form-control" [value]="auditData.audit_trails_id" readonly>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Event Type</label>
+        <input type="text" class="form-control" [value]="auditData.event_type" readonly>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Customer Devices ID</label>
+        <input type="text" class="form-control" [value]="auditData.customer_devices_id" readonly>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Users ID</label>
+        <input type="text" class="form-control" [value]="auditData.users_id" readonly>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">App Name</label>
+        <input type="text" class="form-control" [value]="auditData.appname" readonly>
+      </div>
+     
+       <div class="col-md-6">
+        <label class="form-label">Event Type</label>
+        <input type="text" class="form-control" [value]="auditData.event_type" readonly>
+      </div>
+     
+      <div class="col-md-6">
+        <label class="form-label">Screen Name</label>
+        <input type="text" class="form-control" [value]="auditData.screen" readonly>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Trail Details</label>
+        <input type="text" class="form-control" [value]="auditData.trail_details" readonly>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Created Date</label>
+        <input type="text" class="form-control" [value]="auditData.create_date" readonly>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Device Type</label>
+        <input type="text" class="form-control" [value]="auditData.devicetype" readonly>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Data Response</label>
+        <input type="text" class="form-control" [value]="auditData.dataResponse || 'Null'">
+      </div>
+    </div>
+  </div>
+</div>

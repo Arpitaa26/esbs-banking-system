@@ -1,0 +1,102 @@
+<div class="system-request-container soft-panel">
+  <div class="header-section">
+    <h5 class="mb-3 nav-head-txt">System Request</h5>
+    <div class="search-section">
+      <div class="search-container">
+        <!-- <label class="input-label">System ID</label> -->
+        <div class="search-box">
+          <img src="https://cdn-icons-png.flaticon.com/512/622/622669.png" class="search-icon-left" alt="search-icon" />
+          <input type="search" class="search-input" placeholder="Search By Machine ID" #machineId />
+          <div class="search-svg" (click)="searchDataByMachineId(machineId.value)">
+            <svg width="60" height="52" viewBox="0 0 60 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 -4H60V56H32C14.3269 56 0 41.6731 0 24V-4Z" fill="url(#paint0_linear_103_946)" />
+              <path
+                d="M40.6191 33.3097L34.439 26.8264L31.2412 30.1787L37.4258 36.662C37.9333 37.194 38.7687 37.194 39.2762 36.662L40.6191 35.2542C41.1267 34.7175 41.1267 33.8371 40.6191 33.3097Z"
+                fill="#FEFDFE" />
+              <path
+                d="M31.3809 28.7333L33.0562 26.9772L31.1474 24.9761C32.9529 22.2501 32.7014 18.474 30.3839 16.0446C27.7834 13.3185 23.557 13.3185 20.952 16.0446C18.3471 18.7706 18.3516 23.2011 20.952 25.9319C23.2696 28.3614 26.8716 28.625 29.4721 26.7323L31.3809 28.7333ZM22.2456 24.5571C20.3592 22.5796 20.3592 19.3733 22.2456 17.4005C24.1319 15.4231 27.1905 15.4231 29.0724 17.4005C30.9588 19.378 30.9588 22.5843 29.0724 24.5571C27.1905 26.5346 24.1319 26.5346 22.2456 24.5571Z"
+                fill="#FEFDFE" />
+              <defs>
+                <linearGradient id="paint0_linear_103_946" x1="5.5" y1="-4" x2="60" y2="47"
+                  gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#041643" />
+                  <stop offset="1" stop-color="#3E5ADF" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-dynamic-table [data]="systemRequests" [columns]="tableColumns" [withCheckbox]="false"
+    [rowsPerPage]="itemsPerPage" [enablePagination]="true" (pageChange)="goToPage($event)">
+  </app-dynamic-table>
+
+  <app-common-modal [showModal]="showActionsPopup" [title]="'Add Till'" [buttons]="actionModalButton"
+    (onClose)="closeActionsPopup()" (onAction)="performAction($event)">
+    <div class="popup-body">
+      <div class="request-details">
+        <p class="request-id">Request ID: <strong>{{ selectedRequest?.req_id }}</strong></p>
+        <p class="request-desc">
+          This is a system request from branch <strong>{{ selectedRequest?.branch_name }}</strong> for system
+          <strong>{{ selectedRequest?.machine_id }}</strong>. Please select an action below.
+        </p>
+      </div>
+    </div>
+  </app-common-modal>
+  <!-- Assignment Modal -->
+  <div class="modal-overlay" *ngIf="showAssignmentModal" (click)="closeAssignmentModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">Assign System</h3>
+        <button class="modal-close" (click)="closeAssignmentModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="systemId">System ID</label>
+          <input type="text" id="systemId" class="form-control disabled" [value]="selectedRequest?.machine_id" disabled>
+        </div>
+        <div class="form-group">
+          <label for="branchId">Branch Name</label>
+          <input type="text" id="branchId" class="form-control disabled" [value]="selectedRequest?.branch_name"
+            disabled>
+        </div>
+        <div class="form-group">
+          <label for="assignSystem">Assign To</label>
+          <select id="assignSystem" class="form-control" [(ngModel)]="selectedSystem">
+            <option [ngValue]="null" disabled>Select System</option>
+            <option *ngFor="let system of availableSystems" [ngValue]="system">
+              {{ system.name }} ({{ selectedRequest?.request_for === "exe" ? 'Till' : 'Terminal' }})
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-between">
+        <button class="btn btn-primary" (click)="craeteTillorTerminal()">{{ selectedRequest?.request_for === "exe" ? 'Add Till' : 'Add Terminal' }}</button>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline" (click)="closeAssignmentModal()">Cancel</button>
+          <button class="btn btn-primary" (click)="assignSystem()" [disabled]="!selectedSystem">
+            Assign
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-common-modal [showModal]="showTillModal" [title]="modalHeader" [buttons]="tillModalButton"
+  (onClose)="closeTillModal()" (onAction)="saveTillDetails()">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="tillName">{{modalTitle}}</label>
+      <input type="text" id="tillName" class="form-control" [(ngModel)]="tillAndTerminalName"
+        [placeholder]="modalInputPlaceholder">
+    </div>
+  </div>
+</app-common-modal>

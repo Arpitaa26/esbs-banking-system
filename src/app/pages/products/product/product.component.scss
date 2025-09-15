@@ -1,0 +1,369 @@
+.container-fluid {
+    padding: 20px;
+}
+
+.card {
+    margin-bottom: 20px;
+    border-radius: 14px;
+    background: #f7f9fe;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 12px, rgba(0, 0, 0, 0.24) 0px 1px 21px !important;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #041643, #3E5ADF);
+    color: white;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 14px 14px 0px 0px;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.ql-toolbar {
+    border-radius: 8px 8px 0 0;
+    background-color: #f8f9fa;
+}
+
+.ql-container {
+    border-radius: 0 0 8px 8px;
+    min-height: 150px;
+}
+
+.ql-editor {
+    min-height: 150px;
+    font-size: 14px;
+}
+
+.device-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.device-frame {
+    position: relative;
+    background-color: #0d0d0d;
+    border-radius: 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.iphone-frame {
+    width: 369px;
+    height: 777px;
+    padding: 10px;
+    border: 8px solid #333;
+    background-color: #222;
+}
+
+.iphone-frame .device-screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+    background-color: black;
+    overflow: hidden;
+}
+
+.device-notch {
+    position: absolute;
+    top: 15px;
+    width: 120px;
+    height: 32px;
+    background-color: black;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 10;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.device-notch .speaker {
+    width: 30px;
+    height: 4px;
+    background-color: #333;
+    border-radius: 2px;
+}
+
+.device-notch .camera {
+    width: 8px;
+    height: 8px;
+    background-color: #333;
+    border-radius: 50%;
+}
+
+.side-button {
+    position: absolute;
+    background-color: #333;
+    border-radius: 3px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.iphone-frame .side-button.right {
+    width: 3px;
+    height: 50px;
+    right: -8px;
+    top: 180px;
+}
+
+.iphone-frame .side-button.left {
+    width: 3px;
+    height: 30px;
+    left: -8px;
+    top: 120px;
+}
+
+.iphone-frame .volume-buttons {
+    position: absolute;
+    left: -8px;
+    top: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.iphone-frame .volume-buttons .side-button {
+    width: 3px;
+    height: 50px;
+    position: static;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.iphone-frame .bottom-notch {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background-color: #333;
+    border-radius: 2px;
+}
+
+.android-frame {
+    width: 372px;
+    height: 789px;
+    padding: 12px;
+    border-radius: 35px;
+    border: 6px solid #222;
+    background-color: #111;
+}
+
+.android-frame .device-screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 28px;
+    background-color: black;
+    overflow: hidden;
+}
+
+.punch-hole-camera {
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background-color: #333;
+    border-radius: 50%;
+    z-index: 10;
+    border: 1px solid #000;
+}
+
+.android-frame .volume-buttons {
+    position: absolute;
+    right: -8px;
+    top: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.android-frame .volume-buttons .side-button {
+    width: 3px;
+    height: 45px;
+    position: static;
+}
+
+.android-frame .power-button {
+    position: absolute;
+    right: -8px;
+    top: 120px;
+    width: 3px;
+    height: 60px;
+    background-color: #333;
+    border-radius: 3px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+    .device-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .iphone-frame,
+    .android-frame {
+        transform: scale(0.85);
+        transform-origin: top center;
+    }
+}
+
+.battery-landscape {
+    display: inline-block;
+    transform: rotate(90deg);
+    font-size: 48px;
+}
+
+.drp-dwn {
+    border: 1px solid #cfd8dc;
+}
+
+input[type=checkbox] {
+    border-radius: 1.25em;
+}
+
+input:checked {
+    background-color: #182e7a;
+    border-color: #0d6efd;
+}
+
+.form-check-input {
+    width: 1.2em;
+    height: 1.2em;
+}
+
+.save-btn {
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 3px 18px 3px 18px;
+    background: linear-gradient(135deg, #041643, #3E5ADF);
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 12px, rgba(0, 0, 0, 0.24) 0px 1px 21px !important;
+}
+
+.save-bar {
+    padding: 7px;
+    border-radius: 9px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 2px, rgba(0, 0, 0, 0.24) 0px 1px 2px !important;
+    background-color: #f7f9fe;
+}
+
+.back-arrow {
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+::ng-deep .ql-toolbar.ql-snow+.ql-container.ql-snow {
+    border-top: 0;
+    background: white;
+}
+
+::ng-deep .ql-toolbar.ql-snow {
+    background: white;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.container-fluid {
+    padding: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.mod-row {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+@media (min-width: 992px) {
+    .col-lg-6 {
+        height: 100%;
+        overflow-y: auto;
+        padding-right: 15px;
+    }
+
+    .col-lg-6::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .col-lg-6::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .col-lg-6::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
+
+    .col-lg-6::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .row {
+        overflow-y: auto;
+    }
+
+    .col-md-12 {
+        margin-bottom: 20px;
+    }
+}
+
+.drp-dwn {
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 30px;
+
+    &::after {
+        display: none !important;
+    }
+}
+
+.custom-caret {
+    width: 6px;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #6c757d;
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+.dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.form-check-label {
+    cursor: pointer;
+    padding: 0.25rem 0;
+}
+
+.form-check-input {
+    margin-right: 0.5rem;
+}

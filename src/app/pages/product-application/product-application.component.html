@@ -1,0 +1,13 @@
+<div class="w-100 h-100 pb-4">
+    <segment [segbuttons]="segbuttonConfig" [segmentTab]="currentTab" (segbuttonClicked)="seghandleClick($event)" class="mt-2"></segment>
+    <table [options]="newCustomerProductAppOptions" *ngIf="currentTab==='new_customer_product_application'" class="pb-4"
+        (pageChange)="onPageChange($event, 1)" (searchFilter)="onSearchFilter($event, 1)"
+        (sortChange)="onSortChange($event, 1)">
+    </table>
+
+    <table [options]="newCustomerProductAppWelcomelettersOptions" *ngIf="currentTab==='new_customer_welcome_letters'"
+        class="pb-4" (pageChange)="onPageChange($event, 3)" (searchFilter)="onSearchFilter($event, 3)"
+        (sortChange)="onSortChange($event, 3)">
+    </table>
+
+</div>

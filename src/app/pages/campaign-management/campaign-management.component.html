@@ -1,0 +1,8 @@
+<div class="w-100 h-100 pb-5">
+  <segment [segbuttons]="segbuttonConfig2" [segmentTab]="currentTab" (segbuttonClicked)="seghandleClick($event)"
+    class="mt-2"></segment>
+  <table [options]="campaignActiveOptions" *ngIf="currentTab==='active'" (pageChange)="onPageChange($event, 1)"
+    (sortChange)="onSortChange($event, 1)" (searchFilter)="onSearchFilter($event, 1)"></table>
+  <table [options]="campaignArchivedOptions" *ngIf="currentTab==='archived'" (pageChange)="onPageChange($event, 2)"
+    (sortChange)="onSortChange($event, 2)" (searchFilter)="onSearchFilter($event, 2)"></table>
+</div>

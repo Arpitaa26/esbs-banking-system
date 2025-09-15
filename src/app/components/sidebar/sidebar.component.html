@@ -1,0 +1,48 @@
+<div class="sidebar d-flex flex-column justify-content-between">
+  <div>
+    <div class="logo py-4 px-3 text-center">
+      <img src="image/small-logo.png" alt="Logo" class="img-fluid" width="40" />
+    </div>
+
+    <div class="side-menu">
+      <ul class="nav flex-column">
+        <li class="nav-item" *ngFor="let section of menuSections">
+          <a class="nav-link d-flex align-items-center gap-3 section-header" (click)="toggleSection(section)"
+            [ngClass]="{'section-active': activeSectionTitle === section.title}" style="cursor: pointer;">
+            <span [innerHTML]="section.icon"></span>
+            <span>{{ section.title }}</span>
+            <svg class="ms-auto chevron" [style.transform]="section.isOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
+              xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6,9 12,15 18,9"></polyline>
+            </svg>
+          </a>
+
+          <ul class="nav flex-column nested-menu" *ngIf="section.isOpen">
+            <ng-container *ngFor="let item of section.items">
+              <li class="nav-item"
+                *ngIf="item.label === 'Logout' || item.label === 'Dashboard' || (item.name && item.name !== '' && permissions[item.name]?.read)">
+                <a class="nav-link d-flex align-items-center gap-3" [routerLink]="item.route" routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }" (click)="activateSection(section, item)">
+                  <span [innerHTML]="item.icon"></span>
+                  <span>{{ item.label }}</span>
+                </a>
+              </li>
+            </ng-container>
+          </ul>
+        </li>
+        <ng-container *ngFor="let item of standaloneItems">
+          <li class="nav-item"
+            *ngIf="item.label === 'Logout' || item.label === 'Staff User Management' || (item.name && item.name !== '' && permissions[item.name]?.read)">
+            <a class="nav-link d-flex align-items-center gap-3" [routerLink]="item.route" routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }" (click)="handleStandaloneItemClick(item)"
+              style="cursor: pointer;">
+              <span [innerHTML]="item.icon"></span>
+              <span>{{ item.label }}</span>
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+</div>

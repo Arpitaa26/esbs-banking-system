@@ -1,0 +1,13 @@
+<button [ngClass]="[
+    options.btnColor,
+    options.btnSize,
+    options.btnType === 'round' ? 'btn-round' : '',
+    options.btnType === 'clear' ? 'btn-clear' : ''
+  ]" (click)="callback($event)">
+    <span class="icon" *ngIf="options.icon">
+        <i [class]="options.icon"></i>
+    </span>
+    {{ options.title }}
+</button>
+
+<input #nativefilebutton type="file" (change)="filesAdded($event)" hidden />

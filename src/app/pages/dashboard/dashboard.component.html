@@ -1,0 +1,96 @@
+<div class="container-fluid py-4">
+  <div class="row g-3   justify-content-center" >
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 " *ngFor="let card of overviewCards" (click)="goToRoute(card)">
+      <div class="card overview-card" [ngStyle]="{ 'background-color': card.bgColor }">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <div class="icon-wrapper me-2">
+              <span [innerHTML]="card.icon"></span>
+            </div>
+            <div class="dropdown ms-auto">
+              <i class="bi bi-three-dots-vertical"></i>
+            </div>
+          </div>
+          <h6 class="card-title">{{ card.title }}</h6>
+          <h3 class="amount-txt fw-bold">{{ card.count }}</h3>
+          <p class="mb-0 growth">
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-data">
+    <div class="row g-3">
+      <div class="col-md-12">
+        <div class="box-container container-fluid p-3">
+          <div class="d-flex align-items-center mb-3 gap-4">
+            <div class="d-flex gap-2">
+              <input type="date" class="form-control" [(ngModel)]="fromDate" />
+              <input type="date" class="form-control" [(ngModel)]="toDate" />
+            </div>
+            <button class="btn d-flex align-items-center gap-2 search-btn" (click)="onSearch()">
+              <i class="bi bi-search"></i> Search
+            </button>
+          </div>
+          <div class="nav-tabs-wrapper d-flex mb-3 w-100">
+            <segment class="dashboard-tab" [segbuttons]="segbuttonConfig" (segbuttonClicked)="seghandleClick($event)"
+              class="mt-2"></segment>
+          </div>
+          <div class="after-tabs d-flex row">
+            <div class="col-lg-4" *ngFor="let i of [1, 2, 3]">
+              <div class="card customer-report-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <h5 class="reports-txt mb-0" *ngIf="i == 1">
+                    Active Customer Reports
+                  </h5>
+                  <h5 class="reports-txt mb-0" *ngIf="i == 2 && currentTab == 'daily-reports'">
+                    Overall Customer Reports
+                  </h5>
+                  <h5 class="reports-txt mb-0" *ngIf="i == 2 && currentTab == 'platform-statistics'">
+                    Inactive Customer Reports
+                  </h5>
+                  <h5 class="reports-txt mb-0" *ngIf="i == 3 && currentTab == 'daily-reports'">
+                    Onboarding Customer Reports
+                  </h5>
+                  <h5 class="reports-txt mb-0" *ngIf="i == 3 && currentTab == 'platform-statistics'">
+                    Push Messages
+                  </h5>
+                  <!-- <button class="btn ms-2 main-btn" (click)="toggleChart(i - 1)">View Table</button> -->
+                </div>
+                <div class="d-flex gap-2 align-items-center justify-content-between" >
+                  <div class="chart-container position-relative" [hidden]="showtable[i - 1]">
+                    <span *ngIf="hasZero[i - 1]">No Data</span>
+                    <canvas #customerChartCanvas style="width: 140px; height: 140px" [hidden]="hasZero[i - 1]"></canvas>
+                    <div class="chart-center-label position-absolute top-50 start-50 translate-middle text-center">
+                    </div>
+                  </div>
+                  <ul class="list-unstyled mb-0 w-100" *ngIf="currentTab == 'daily-reports' && !showtable[i - 1]">
+                    <li *ngFor="let item of statsPerChart[i - 1]"
+                      class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="d-flex align-items-center gap-3">
+                        <span class="dot" [ngStyle]="{ 'background-color': item.color }"></span>
+                        {{ item.label }}
+                      </span>
+                      <span>{{ item.count }}</span>
+                    </li>
+                  </ul>
+                  <ul class="list-unstyled mb-0 w-100" *ngIf="currentTab == 'platform-statistics' && !showtable[i - 1]">
+                    <li *ngFor="let item of statsPerChartPS[i - 1]"
+                      class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="d-flex align-items-center gap-3">
+                        <span class="dot" [ngStyle]="{ 'background-color': item.color }"></span>
+                        {{ item.label }}
+                      </span>
+                      <span>{{ item.count }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

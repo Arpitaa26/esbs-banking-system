@@ -1,0 +1,44 @@
+.layout-container {
+    height: 100vh;
+    display: flex;
+    background: #f5f8ff;
+    overflow: hidden;
+}
+
+.sideber_wraper {
+    width: 18%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #041643;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.main_body_wraper {
+    width: 82%;
+    margin-left: 18%;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.navbar-wrapper {
+    height: 60px;
+    position: fixed;
+    top: 0;
+    left: 18%;
+    right: 0;
+    z-index: 1001;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.main-wrapper {
+    flex: 1;
+    margin-top: 60px;
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+    background: #f5f8ff;
+}

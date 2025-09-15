@@ -1,0 +1,704 @@
+<div class="container-fluid px-4 pt-2 pb-5">
+    <div class="row px-3">
+        <div class="col">
+            <div *ngIf="product && product.parentname" class="alert alert-warning me-auto p-1">
+                Child product of <b>{{(product.parentname)}}</b>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-2 p-1 save-bar">
+            <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-5 text-dark back-arrow pe-auto"></i>
+            <div class="d-flex justify-content-end align-items-center p-0">
+                <button class=" mx-1 w-10 back-btn place-self-end save-btn rounded-2" (click)="save(0)"
+                    *ngIf="dirtyFlag && new && (isAddParent || isAddChild || isAddProduct) && this.gps.userPermissions.productedit.read == 1">
+                    <i class="bi bi-check-circle"></i> Save Changes
+                </button>
+
+                <button class="mx-1 w-10 back-btn place-self-end save-btn rounded-2" (click)="save(7)"
+                    *ngIf="!new && this.gps.userPermissions.productedit.read == 1 && (statusData === 'Creator_Rejected' || statusData === 'Compliance_Rejected' || statusData === 'Authoriser_Rejected' || product.isactive==1)">
+                    <i class="bi bi-check-circle"></i> Save Changes
+                </button>
+
+                <button class="btn btn-sm btn-danger mx-1 rounded-2" (click)="save(2)"
+                    *ngIf="!new && this.gps.usersRoleProductCompliance == 1 && statusData === 'Drafted'">
+                    Authoriser Reject
+                </button>
+
+                <button class="btn btn-sm btn-success mx-1 rounded-2" (click)="save(3)"
+                    *ngIf="!new && this.gps.userPermissions.productcompliance.read == 1 && statusData === 'Drafted'">
+                    Authoriser Approved
+                </button>
+
+                <button class="btn btn-sm btn-danger mx-1 rounded-2" (click)="save(4)"
+                    *ngIf="!new && this.gps.userPermissions.productsubmit.read == 1 && statusData === 'Compliance_Approved'">
+                    Compliance Reject
+                </button>
+
+                <button class="btn btn-sm btn-success mx-1 rounded-2" (click)="save(1)"
+                    *ngIf="!new && this.gps.userPermissions.productsubmit.read == 1 && statusData === 'Compliance_Approved'">
+                    Compliance Approved
+                </button>
+
+                <button class="btn btn-sm btn-danger mx-1 rounded-2" (click)="save(5)"
+                    *ngIf="!new && this.gps.userPermissions.productedit.read == 1 && statusData === 'Drafted'">
+                    Creator Rejected
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row mod-row rounded-3">
+        <div class="col-lg-6 col-md-12">
+            <div class="row" *ngIf="(isAddProduct || isAddChild) && !isAddParent">
+                <div class="mb-3">
+                    <div class="card">
+                        <div class="card-header">Select Product</div>
+                        <div class="card-body">
+                            <select class="form-select" [disabled]="!canSelectAccount"
+                                [(ngModel)]="product.accountTypeIdentifier" name="accountname" (ngModelChange)="dirty()"
+                                (change)="onAccSelect1()">
+                                <option [ngValue]="null" disabled>
+                                    Please Select Product
+                                </option>
+                                <option *ngFor="let obj of productTypes_2" [ngValue]="obj.accountTypeIdentifier">
+                                    {{obj.accountname}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="card">
+                        <div class="card-header">Product Type</div>
+                        <div class="card-body">
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle w-100 text-start drp-dwn bg-light position-relative"
+                                    type="button" data-bs-toggle="dropdown" [disabled]="!canSelectAccount">
+                                    {{ selectedOptions.length > 0 ? selectedOptions.join(', ') : 'Select Product Type'}}
+                                    <span
+                                        class="position-absolute end-0 top-50 translate-middle-y me-3 custom-caret"></span>
+                                </button>
+                                <ul class="dropdown-menu px-3 w-100">
+                                    <li *ngFor="let option of productTypOptn">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" [id]="option"
+                                                [value]="option" [checked]="selectedOptions.includes(option)"
+                                                (change)="onCheckboxChange($event)">
+                                            <label class="form-check-label" [for]="option">{{ option }}</label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3" *ngIf="product?.is_isa || product?.is_junior">
+                <div class="card-header" *ngIf="product.is_junior">
+                    Junior Product
+                </div>
+                <div class="card-body" *ngIf="product.is_junior">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Min Age:</label>
+                            <input type="number" class="form-control" placeholder="Min Age" maxlength="2"
+                                [disabled]="!isAllowedtoEdit" [(ngModel)]="product.junior_min_age">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Max Age:</label>
+                            <input type="number" class="form-control" placeholder="Max Age" maxlength="2"
+                                [disabled]="!isAllowedtoEdit" [(ngModel)]="product.junior_max_age">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Account Open:</label>
+                        <select class="form-select" [(ngModel)]="product.account_open_for"
+                            [disabled]="!isAllowedtoEdit">
+                            <option selected disabled>Select product</option>
+                            <option value="B">Both Parent/Guardian & Children</option>
+                            <option value="C">Sole Children only</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card-header" *ngIf="product.is_isa">
+                    ISA Product
+                </div>
+                <div class="card-body" *ngIf="product.is_isa">
+                    <div class="mb-3">
+                        <label class="form-label">ISA Terms & Conditions</label>
+                        <div id="isaproductEditor" *ngIf="(isAddProduct || isAddChild) && isarchived===false"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ISA Declaration</label>
+                        <div id="isaDeclarationEditor" *ngIf="(isAddProduct || isAddChild) && isarchived===false"></div>
+                    </div>
+                    <div class="mb-3" *ngIf="product.is_isa">
+                        <label class="form-label">Upload Documents</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="btn btn-sm btn-primary mb-0">
+                                Upload Document
+                                <input type="file" style="display: none;" id="uploadFile" multiple
+                                    (change)="uploadDocuments($event)" #documentFiles>
+                            </label>
+                            <span *ngIf="filenames" class="text-muted">{{this.filenames}}</span>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-3" *ngFor="let file of existing_attachments">
+                                <div class="p-2 bg-light rounded">
+                                    <p class="small mb-1">Filename: {{file.filename}}</p>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-sm btn-outline-primary"
+                                            (click)="viewFile(file)">View</button>
+                                        <button class="btn btn-sm btn-outline-danger" [disabled]="!isAllowedtoEdit"
+                                            (click)="deleteFile(file.document_id)">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="card mb-3" *ngIf="(isAddProduct || isAddChild) && !isAddParent">
+                <div class="card-header">Product Holdcode</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Online Holdcode:</label>
+                            <input type="text" class="form-control" placeholder="Online holdcode" maxlength="20"
+                                [disabled]="!isAllowedtoEdit" [(ngModel)]="product.online_holdcode">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">App Holdcode:</label>
+                            <input type="text" class="form-control" placeholder="App holdcode" maxlength="20"
+                                [disabled]="!isAllowedtoEdit" [(ngModel)]="product.app_holdcode">
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="card mb-3" *ngIf="isAddProduct || isAddParent || isAddChild">
+                <div class="card-header">Product Visiblity</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="visAll" [disabled]="!isAllowedtoEdit"
+                                [(ngModel)]="product.product_visiblity" value="all">
+                            <label class="form-check-label" for="visAll">All Customer</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="visNew" [disabled]="!isAllowedtoEdit"
+                                [(ngModel)]="product.product_visiblity" value="new">
+                            <label class="form-check-label" for="visNew">New Customers only</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="visExisting" [disabled]="!isAllowedtoEdit"
+                                [(ngModel)]="product.product_visiblity" value="existing">
+                            <label class="form-check-label" for="visExisting">Existing Customers only</label>
+                        </div>
+                        <div *ngIf="error.product_visiblity" class="text-danger mt-1">
+                            {{ error.product_visiblity }}
+                        </div>
+                    </div>
+                    <div class="mb-3" *ngIf="product.product_visiblity=='specific'">
+                        <label class="form-label">
+                            Paste Customer IDs one below other
+                        </label>
+                        <textarea class="form-control" [(ngModel)]="product.customers_ids" [disabled]="!isAllowedtoEdit"
+                            rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3" *ngIf="isAddProduct || isAddParent || isAddChild">
+                <div class="card-header">Promotional Date</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label class="form-label">From Date</label>
+                            <input type="date" class="form-control" [disabled]="!isAllowedtoEdit" [(ngModel)]="fromdate"
+                                (change)="frdate($event)">
+                            <span *ngIf="!isAllowedtoEdit" class="text-muted">{{product.start_date | date}}</span>
+                            <div *ngIf="error.start_date" class="text-danger mt-1">
+                                {{ error.start_date }}
+                            </div>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label class="form-label">To Date</label>
+                            <input type="date" class="form-control" [disabled]="!isAllowedtoEdit" [(ngModel)]="todate"
+                                [min]="fromdate" (change)="tDate($event)">
+                            <span *ngIf="!isAllowedtoEdit" class="text-muted">{{product.end_date | date}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3" *ngIf="(isAddProduct || isAddChild) && !isAddParent">
+                <div class="card-header">Parent Product</div>
+                <div class="card-body">
+                    <select class="form-select" [disabled]="!canSelectParent" [(ngModel)]="product.parentid"
+                        name="title" (change)="onAccSelect()" (ngModelChange)="dirty()">
+                        <option value="selected">Please Select Parent Product</option>
+                        <option *ngFor="let product of parentProduct" [value]="product.products_id">
+                            {{product.title}}
+                        </option>
+                    </select>
+                    <div *ngIf="isParentProductOfOthers" class="text-danger mt-2">
+                        This product is already a parent
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3" *ngIf="isAddProduct || isAddParent || isAddChild">
+                <div class="card-header">Product content</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-control" [(ngModel)]="product.title"
+                            [class.is-invalid]="isProductTitleChanged" [disabled]="!isAllowedtoEdit"
+                            placeholder="Product Title" (ngModelChange)="dirty(); hasChanged('title')">
+                        <div *ngIf="error.title" class="text-danger mt-1">
+                            {{ error.title }}
+                        </div>
+                        <div *ngIf="isProductTitleChanged" class="invalid-feedback d-block">
+                            Platform selection is required.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Sub Title</label>
+                        <input type="text" class="form-control" [(ngModel)]="product.sub_title"
+                            [class.is-invalid]="isProductSubTitleChanged" [disabled]="!isAllowedtoEdit"
+                            placeholder="Product Sub Title" (ngModelChange)="dirty(); hasChanged('sub_title')">
+                        <div *ngIf="error.sub_title" class="text-danger mt-1">
+                            {{ error.sub_title }}
+                        </div>
+                        <div *ngIf="isProductSubTitleChanged" class="invalid-feedback d-block">
+                            Platform selection is required.
+                        </div>
+                    </div>
+                    <div class="mb-3" *ngIf="(isAddProduct || isAddChild)&& !isAddParent">
+                        <label class="form-label">Body</label>
+                        <div id="productEditor" *ngIf="(isAddProduct || isAddChild) && isarchived===false"></div>
+                        <!-- <div *ngIf="isAddProduct" class="text-muted mt-1">
+                            Note: You can use HTML Tags in the body
+                        </div> -->
+                    </div>
+                    <!-- <div class="mb-3" *ngIf="(isAddProduct || isAddChild)&& !isAddParent">
+                        <label class="form-label">Summary</label>
+                        <div id="productEditor2" *ngIf="(isAddProduct || isAddChild) && isarchived===false"></div>
+                 <div *ngIf="isAddProduct" class="text-muted mt-1">
+                            Note: You can use HTML Tags in the summary
+                        </div>
+                    </div> -->
+                    <!-- <div class="mb-3" *ngIf="(isAddProduct || isAddChild)&& !isAddParent">
+                        <label class="form-label">T&Cs</label>
+                        <div id="productEditor3" *ngIf="(isAddProduct || isAddChild) && isarchived===false"></div>
+                         <div *ngIf="isAddProduct" class="text-muted mt-1">
+                            Note: You can use HTML Tags in the T&Cs
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+
+            <div class="card mb-3" *ngIf="(isAddProduct || isAddChild) && !is_sopra && !isAddParent">
+                <div class="card-header">Is Maturity?</div>
+                <div class="card-body">
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="isMatured" [disabled]="!isAllowedtoEdit"
+                            [(ngModel)]="product.ismatured_product">
+                        <label class="form-check-label" for="isMatured">
+                            Is Maturity Product?
+                        </label>
+                    </div>
+                    <div class="alert alert-info">
+                        <small>Note: <br>This product is only to be used for maturity selection and not available in
+                            product list on
+                            app</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3"
+                *ngIf="(isAddProduct || isAddChild) && isarchived===false && !is_sopra && product?.ismatured_product">
+                <div class="card-header">Maturity Options</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="autoRollover"
+                                [disabled]="!isAllowedtoEdit"
+                                [(ngModel)]="product.maturityTypes.automatic_rollover.type">
+                            <label class="form-check-label" for="autoRollover">
+                                Automatic Rollover
+                            </label>
+                        </div>
+                        <div class="row" *ngIf="product.maturityTypes.automatic_rollover.type">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" [disabled]="!isAllowedtoEdit"
+                                    [(ngModel)]="product.maturityTypes.automatic_rollover.value"
+                                    placeholder="Enter label text to display in the app">
+                                <div *ngIf="product.maturityTypes.automatic_rollover.type && error.automatic_rollover"
+                                    class="text-danger mt-1">
+                                    {{ error.automatic_rollover }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="transferProducts"
+                                [disabled]="!isAllowedtoEdit" [(ngModel)]="product.maturityTypes.new_products.type">
+                            <label class="form-check-label" for="transferProducts">
+                                Transfer to new products
+                            </label>
+                        </div>
+                        <div class="row" *ngIf="product.maturityTypes.new_products.type">
+                            <div class="col-md-6 mb-2">
+                                <input type="text" class="form-control" required [disabled]="!isAllowedtoEdit"
+                                    [(ngModel)]="product.maturityTypes.new_products.value"
+                                    placeholder="Enter label text to display in the app">
+                                <div *ngIf="product.maturityTypes.new_products.type && error.new_products"
+                                    class="text-danger mt-1">
+                                    {{ error.new_products }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <select class="form-select" placeholder="Select Product to transfer"
+                                    [disabled]="!isAllowedtoEdit"
+                                    [(ngModel)]="product.maturityTypes.new_products.products" multiple>
+                                    <option *ngFor="let product of allActiveProducts" [value]="product.products_id">
+                                        {{ product.title }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="partWithdrawal"
+                                [disabled]="!isAllowedtoEdit" [(ngModel)]="product.maturityTypes.part_withdrawal.type">
+                            <label class="form-check-label" for="partWithdrawal">
+                                Part Withdrawal
+                            </label>
+                        </div>
+                        <div class="row" *ngIf="product.maturityTypes.part_withdrawal.type">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" [disabled]="!isAllowedtoEdit"
+                                    [(ngModel)]="product.maturityTypes.part_withdrawal.value"
+                                    placeholder="Enter label text to display in the app">
+                                <div *ngIf="product.maturityTypes.part_withdrawal.type && error.part_withdrawal"
+                                    class="text-danger mt-1">
+                                    {{ error.part_withdrawal }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="closeAccount"
+                                [disabled]="!isAllowedtoEdit" [(ngModel)]="product.maturityTypes.close_account.type">
+                            <label class="form-check-label" for="closeAccount">
+                                Close Account
+                            </label>
+                        </div>
+                        <div class="row" *ngIf="product.maturityTypes.close_account.type">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" [disabled]="!isAllowedtoEdit"
+                                    [(ngModel)]="product.maturityTypes.close_account.value"
+                                    placeholder="Enter label text to display in the app">
+                                <div *ngIf="product.maturityTypes.close_account.type && error.close_account"
+                                    class="text-danger mt-1">
+                                    {{ error.close_account }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3" *ngIf="( isAddProduct || isAddChild )&& !isAddParent">
+                <div class="card-header">Account Alert</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="isAlert" [disabled]="!isAllowedtoEdit"
+                                [(ngModel)]="product.isAlert" (click)="isActive = !isActive">
+                            <label class="form-check-label" for="isAlert">
+                                Alert for X number of accounts opened
+                            </label>
+                        </div>
+                        <div class="row" *ngIf="isActive">
+                            <div class="col-md-12 mb-2">
+                                <input type="number" class="form-control" [disabled]="!isAllowedtoEdit"
+                                    [(ngModel)]="product.alertValue" placeholder="Number of Accounts">
+                                <div *ngIf="isActive && error.alertValue" class="text-danger mt-1">
+                                    {{ error.alertValue }}
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" [disabled]="!isAllowedtoEdit"
+                                    [(ngModel)]="product.alertMessage" placeholder="Please enter your message">
+                                <div *ngIf="isActive && error.alertMessage" class="text-danger mt-1">
+                                    {{ error.alertMessage }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="isRestrict"
+                                [disabled]="!isAllowedtoEdit" [(ngModel)]="product.isRestrict"
+                                (click)="isActives = !isActives">
+                            <label class="form-check-label" for="isRestrict">
+                                Restrict Customer after Y number of accounts Opened
+                            </label>
+                        </div>
+                        <div class="row" *ngIf="isActives">
+                            <div class="col-md-12 mb-2">
+                                <input type="number" class="form-control" [disabled]="!isAllowedtoEdit"
+                                    [(ngModel)]="product.restrictValue" placeholder="Number of Accounts">
+                                <div *ngIf="isActive && isActives && error.restrictValue" class="text-danger mt-1">
+                                    {{ error.restrictValue }}
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" [disabled]="!isAllowedtoEdit"
+                                    [(ngModel)]="product.restrictMessage" placeholder="Please enter your message">
+                                <div *ngIf="isActive && isActives && error.restrictMessage" class="text-danger mt-1">
+                                    {{ error.restrictMessage }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3" *ngIf="(isAddProduct || isAddChild)&& !isAddParent">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Product Features</span>
+                    <button class="btn btn-sm rounded-3 text-bg-warning" (click)="addAction()"
+                        [disabled]="!isAllowedtoEdit">
+                        <i class="bi bi-plus-circle"></i> Add Product Feature
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div *ngIf="product?.productbutton?.length === 0" class="text-muted">
+                        No features added yet.
+                    </div>
+                    <div *ngFor="let action of product.productbutton"
+                        class="d-flex justify-content-between align-items-center mb-2">
+                        <div>{{action.title}}</div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-2"
+                                (click)="editAction(action, action.title)" [disabled]="!isAllowedtoEdit">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" (click)="deleteAction(action, action.title)"
+                                [disabled]="!isAllowedtoEdit">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3"
+                *ngIf="(isAddProduct || isAddChild) && product.accountTypeIdentifier && !isAddParent">
+                <div class="card-header">Additional Product Rules</div>
+                <div class="card-body">
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Existing customer > 12 months ?
+                        </label>
+                        <div *ngIf="error.existing_greater_twelve" class="text-danger mt-1">
+                            {{ error.existing_greater_twelve }}
+                        </div>
+                        <div class="d-flex gap-3 mt-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="existingGreaterYes"
+                                    [disabled]="!isAllowedtoEdit" [(ngModel)]="existing_greater_yes"
+                                    (change)="cb_existing_greater_twelve($event,'yes')">
+                                <label class="form-check-label" for="existingGreaterYes">Yes</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="existingGreaterNo"
+                                    [disabled]="!isAllowedtoEdit" [(ngModel)]="existing_greater_no"
+                                    (change)="cb_existing_greater_twelve($event,'no')">
+                                <label class="form-check-label" for="existingGreaterNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Existing customer < 12 months ? </label>
+                                <div *ngIf="error.existing_lower_twelve" class="text-danger mt-1">
+                                    {{ error.existing_lower_twelve }}
+                                </div>
+                                <div class="d-flex gap-3 mt-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="existingLowerYes"
+                                            [disabled]="!isAllowedtoEdit" [(ngModel)]="existing_lower_yes"
+                                            (change)="cb_existing_lower_twelve($event,'yes')">
+                                        <label class="form-check-label" for="existingLowerYes">Yes</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="existingLowerNo"
+                                            [disabled]="!isAllowedtoEdit" [(ngModel)]="existing_lower_no"
+                                            (change)="cb_existing_lower_twelve($event,'no')">
+                                        <label class="form-check-label" for="existingLowerNo">No</label>
+                                    </div>
+                                </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Passbook customer allowed ?
+                        </label>
+                        <div *ngIf="error.passbook_allowed" class="text-danger mt-1">
+                            {{ error.passbook_allowed }}
+                        </div>
+                        <div class="d-flex gap-3 mt-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="passbookAllowedYes"
+                                    [disabled]="!isAllowedtoEdit" [(ngModel)]="passbook_allowed_yes"
+                                    (change)="cb_passbook_allowed($event,'yes')">
+                                <label class="form-check-label" for="passbookAllowedYes">Yes</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="passbookAllowedNo"
+                                    [disabled]="!isAllowedtoEdit" [(ngModel)]="passbook_allowed_no"
+                                    (change)="cb_passbook_allowed($event,'no')">
+                                <label class="form-check-label" for="passbookAllowedNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Deposit Frequency :</label>
+                        <div *ngIf="error.deposit_frequency" class="text-danger mt-1">
+                            {{error.deposit_frequency}}
+                        </div>
+                        <select class="form-select" [disabled]="!isAllowedtoEdit"
+                            [(ngModel)]="product.deposit_frequency" (change)="ddlFrequencyChange()">
+                            <option selected disabled>Select Deposit Frequency</option>
+                            <option value="Unlimited">Unlimited</option>
+                            <option value="Monthly">Monthly</option>
+                            <option value="N/A">N/A</option>
+                        </select>
+                    </div>
+
+                    <div class="row" *ngIf="product.deposit_frequency=='Monthly'">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Minimum Monthly Deposit :</label>
+                            <input type="number" class="form-control" [disabled]="!isAllowedtoEdit"
+                                [(ngModel)]="product.min_monthly_deposit" placeholder="Minimum Monthly Deposit">
+                            <div *ngIf="error.min_monthly_deposit" class="text-danger mt-1">
+                                {{ error.min_monthly_deposit }}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Maximum Monthly Deposit :</label>
+                            <input type="number" class="form-control" [disabled]="!isAllowedtoEdit"
+                                [(ngModel)]="product.max_monthly_deposit" placeholder="Maximum Monthly Deposit">
+                            <div *ngIf="error.max_monthly_deposit" class="text-danger mt-1">
+                                {{ error.max_monthly_deposit }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Number of Accounts a customer can hold:</label>
+                        <input type="number" class="form-control" [disabled]="!isAllowedtoEdit" (keyup)="onlynumber()"
+                            [(ngModel)]="product.numberofaccountsacustomercanhold"
+                            placeholder="Number of Accounts a customer can hold">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="card mb-3">
+                <div class="card-header text-center">Live Product Preview</div>
+                <div class="card-body">
+                    <segment [segbuttons]="segbuttonConfig" (segbuttonClicked)="seghandleClick($event)" class="my-2">
+                    </segment>
+
+                    <div class="preview-container">
+                        <div class="device-container">
+                            <div class="device-frame iphone-frame mx-auto" *ngIf="deviceType=='ios'">
+                                <div class="device-notch">
+                                    <div class="speaker"></div>
+                                    <div class="camera"></div>
+                                </div>
+                                <div class="dynamic-island"></div>
+                                <iframe [srcdoc]="previewHtml" frameborder="0" class="device-screen"></iframe>
+                                <div class="side-button right"></div>
+                                <div class="side-button left"></div>
+                                <div class="volume-buttons"></div>
+                                <div class="bottom-notch"></div>
+                            </div>
+                            <div class="device-frame android-frame" *ngIf="deviceType=='android'">
+                                <div class="punch-hole-camera"></div>
+                                <iframe [srcdoc]="previewHtml" frameborder="0" class="device-screen"></iframe>
+                                <div class="volume-buttons">
+                                    <div class="side-button"></div>
+                                    <div class="side-button"></div>
+                                </div>
+                                <div class="power-button"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3" *ngIf="(isAddProduct || isAddChild) && product.payment_type && !isAddParent">
+                <div class="card-header">Product Rules</div>
+                <div class="card-body">
+                    <div class="mb-3" *ngIf="product.payment_type">
+                        <label class="form-label">Payment Type</label>
+                        <input type="text" class="form-control" [(ngModel)]="product.payment_type" disabled>
+                    </div>
+                    <div class="mb-3" *ngIf="product.min_age">
+                        <label class="form-label">Minimum Age</label>
+                        <input type="text" class="form-control" [(ngModel)]="product.min_age" disabled>
+                    </div>
+                    <div class="mb-3" *ngIf="product.max_age">
+                        <label class="form-label">Maximum Age</label>
+                        <input type="text" class="form-control" [(ngModel)]="product.max_age" disabled>
+                    </div>
+                    <div class="mb-3" *ngIf="product.min_credit">
+                        <label class="form-label">Minimum Credit</label>
+                        <input type="text" class="form-control" [(ngModel)]="product.min_credit" disabled>
+                    </div>
+                    <div class="mb-3" *ngIf="product.max_credit">
+                        <label class="form-label">Maximum Credit</label>
+                        <input type="text" class="form-control" [(ngModel)]="product.max_credit" disabled>
+                    </div>
+                    <div class="mb-3" *ngIf="product.is_joint">
+                        <label class="form-label">Joint Customer Allowed</label>
+                        <input type="text" class="form-control" [(ngModel)]="product.is_joint" disabled>
+                    </div>
+                    <div class="mb-3" *ngIf="product.max_account_holders">
+                        <label class="form-label">Maximum Account Holders</label>
+                        <input type="text" class="form-control" [(ngModel)]="product.max_account_holders" disabled>
+                    </div>
+                    <div class="mb-3" *ngIf="product.society_end_date">
+                        <label class="form-label">Society End Date</label>
+                        <input type="text" class="form-control" [(ngModel)]="product.society_end_date" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">User Activity</div>
+                <div class="card-body">
+                    <table [options]="productAuditTrails"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

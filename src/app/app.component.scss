@@ -1,0 +1,43 @@
+.layout-container {
+  position: relative;
+}
+
+.sideber_wraper {
+  width: 17%;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.main_body_wraper {
+  width: 83%;
+  float: right;
+}
+
+.background-color {
+  background-color: #F5F8FF;
+}
+
+.app-layout {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  padding: 16px;
+}
+
+.test-mode-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: green;
+  color: white;
+  text-align: center;
+  padding: 5px 0;
+  font-weight: bold;
+  font-size: 18px;
+  z-index: 10000;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,41 @@
+.save-bar {
+  padding: 9px;
+  border-radius: 9px;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 2px, rgba(0, 0, 0, 0.24) 0px 1px 2px !important;
+  background-color: #f7f9fe;
+}
+
+.back-arrow {
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.form-label {
+  font-family: 'Nunito', sans-serif;
+  color: #083A50;
+  font-weight: 500;
+}
+
+.left-card {
+  background: #f7f9fe;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 2px, rgba(0, 0, 0, 0.24) 0px 1px 2px !important;
+}
+
+.save-btn {
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 3px 18px 3px 18px;
+  background: linear-gradient(135deg, #041643, #3E5ADF);
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 12px, rgba(0, 0, 0, 0.24) 0px 1px 21px !important;
+}
+
+.auto-grow-textarea {
+  overflow: hidden;
+  resize: none;
+  height: auto;
+}

@@ -1,0 +1,85 @@
+<!-- Top Save Bar -->
+<div class="d-flex justify-content-between align-items-center mx-3 mt-2 p-1 save-bar">
+  <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-4 text-dark back-arrow"></i>
+</div>
+
+<!-- Page Layout -->
+<div class="container">
+  <div class="row main-layout ps-1 pb-5">
+  <!-- Left Form Card -->
+  <div class="col-6 pe-2  mt-2">
+    <div class="left-card">
+      <div class="form-body">
+        <div class="col-md-12 mb-3">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-control py-2" [(ngModel)]="firstName" readonly />
+        </div>
+        <div class="col-md-12 mb-3">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-control py-2" [(ngModel)]="lastName" readonly />
+        </div>
+        <div class="col-md-12 mb-3">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-control py-2" [(ngModel)]="date" readonly />
+        </div>
+        <div class="col-md-12 mb-3">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-control py-2" [(ngModel)]="email" readonly />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Chat Card -->
+  <div class="col-6  ps-2 mt-2">
+    <div class="right-card">
+      <div class="chat-container card p-3">
+
+        <!-- Chat Messages -->
+      <div class="chat-messages" #chatMessages>
+        <div *ngFor="let msg of messages" class="d-flex mb-4" [ngClass]="{'justify-content-start': msg.sender === 'User', 'justify-content-end': msg.sender !== 'User'}">
+
+            <!-- Assistant Message -->
+            <ng-container *ngIf="msg.sender == 'User'">
+              <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="rounded-circle me-2"
+                style="width: 36px; height: 36px;" />
+              <div>
+                <div class="user-name mb-1">{{ msg.sender }}</div>
+                <div class="assistant-bubble px-3 py-2">{{ msg.content }}</div>
+                <div class="time-stramp text-muted small mt-1">{{ msg.timestamp | date: 'shortTime' }}</div>
+              </div>
+            </ng-container>
+
+            <!-- User Message -->
+            <ng-container *ngIf="msg.sender !== 'User'">
+              <div>
+                <div class="user-name mb-1">{{ msg.sender }}</div>
+                <div class="user-bubble px-3 py-2">{{ msg.content }}</div>
+                <div class="time-stramp text-muted text-end small mt-1">{{ msg.timestamp | date: 'shortTime' }}</div>
+              </div>
+              <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="rounded-circle me-2"
+                style="width: 36px; height: 36px; margin: 10px;" />
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input input-group align-items-center border rounded-pill px-3 py-1 bg-white">
+          <i class="bi bi-emoji-smile me-2 text-muted"></i>
+          <input type="text" class="form-control border-0 shadow-none" placeholder="Reply ..."
+            [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" />
+          <button class="btn btn-primary rounded-circle ms-2 p-2  send-btn" type="button" (click)="sendMessage()">
+            <span class="send-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
+                <path d="M9 18L15 12L9 6" stroke="white" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>

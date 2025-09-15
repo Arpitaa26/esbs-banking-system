@@ -1,0 +1,34 @@
+ <div class="container" *ngIf="userData?.customer_data && userData?.marketing; else noData">
+  <div class="mb-4 ms-2 text-md-start text-center mt-4">
+    <h2 class="text">{{ userData.customer_data.fullname || 'No Name' }}</h2>
+    <p class="text">
+      <b>Phoebus Reference Number: {{ userData.customer_data.memberid || 'N/A' }}</b>
+    </p>
+  </div>
+
+  <div class="row g-3 d-flex">
+    <div class="col-md-6">
+      <label class="form-label">Post</label>
+      <input type="text" class="form-control" [value]="userData.marketing.post || 'N/A'" readonly />
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Telephone</label>
+      <input type="text" class="form-control" [value]="userData.marketing.telephone || 'N/A'" readonly />
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Email</label>
+      <input type="text" class="form-control" [value]="userData.marketing.email || 'N/A'" readonly />
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Fax</label>
+      <input type="text" class="form-control" [value]="userData.marketing.mobile_phone_sms || 'N/A'" readonly />
+    </div>
+  </div>
+</div>
+
+<ng-template #noData>
+  <p class="text-center mt-5">No data available. Please search for a customer first.</p>
+</ng-template>

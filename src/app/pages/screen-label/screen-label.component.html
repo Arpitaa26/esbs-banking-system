@@ -1,0 +1,123 @@
+<!-- Tab Segment -->
+<segment
+  [segbuttons]="segbuttonConfig"
+  (segbuttonClicked)="seghandleClick($event)"
+  class="mt-2 container"
+></segment>
+
+<!-- Tab Content -->
+<div class="container">
+  <div class="tab-wrapper-container d-flex flex-column mt-4">
+
+    <!-- MOBILE APP TAB -->
+    <div *ngIf="currentTab === 'mobile_app'" class="tab-content-layout">
+      <div class="tab-card flex-column">
+
+        <!--  Search -->
+        <div class="search-box-lable mb-3">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
+            class="search-icon-left"
+            alt="search-icon"
+          />
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search..."
+            [(ngModel)]="key"
+            (ngModelChange)="filterMobileLabels()"
+            (input)="filterMobileLabels()"
+          />
+           <div class="search-svg-lable">
+          <svg width="41" height="41" viewBox="0 0 60 52" fill="none" xmlns="http://www.w3.org/2000/svg"
+            class="right-radius-svg">
+            <path d="M0 -4H60V56H32C14.3269 56 0 41.6731 0 24V-4Z" fill="url(#paint0_linear_103_946)" />
+            <path
+              d="M40.6191 33.3097L34.439 26.8264L31.2412 30.1787L37.4258 36.662C37.9333 37.194 38.7687 37.194 39.2762 36.662L40.6191 35.2542C41.1267 34.7175 41.1267 33.8371 40.6191 33.3097Z"
+              fill="#FEFDFE" />
+            <path
+              d="M31.3809 28.7333L33.0562 26.9772L31.1474 24.9761C32.9529 22.2501 32.7014 18.474 30.3839 16.0446C27.7834 13.3185 23.557 13.3185 20.952 16.0446C18.3471 18.7706 18.3516 23.2011 20.952 25.9319C23.2696 28.3614 26.8716 28.625 29.4721 26.7323L31.3809 28.7333ZM22.2456 24.5571C20.3592 22.5796 20.3592 19.3733 22.2456 17.4005C24.1319 15.4231 27.1905 15.4231 29.0724 17.4005C30.9588 19.378 30.9588 22.5843 29.0724 24.5571C27.1905 26.5346 24.1319 26.5346 22.2456 24.5571Z"
+              fill="#FEFDFE" />
+            <defs>
+              <linearGradient id="paint0_linear_103_946" x1="5.5" y1="-4" x2="60" y2="47"
+                gradientUnits="userSpaceOnUse">
+                <stop stop-color="#041643" />
+                <stop offset="1" stop-color="#3E5ADF" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+        </div>
+        </div>
+
+        <!--  Buttons Grid -->
+        <div class="labels-grid">
+          <button
+            *ngFor="let label of pageLabelsMobile2"
+            class="btn account-btn"
+            [ngClass]="{ selected: selectedLabelMobile === label }"
+            (click)="onLabelSelect(label, 'mobile')"
+            (click)="goToDetails(label)"
+          >
+            {{ label }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BANK ONLINE TAB -->
+    <div *ngIf="currentTab === 'bank_online'" class="tab-content-layout">
+      <div class="tab-card flex-column">
+
+        <!--  Search -->
+        <div class="search-box-lable mb-3">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
+            class="search-icon-left"
+            alt="search-icon"
+          />
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search..."
+                      />
+  <div class="search-svg-lable">
+          <svg width="41" height="41" viewBox="0 0 60 52" fill="none" xmlns="http://www.w3.org/2000/svg"
+            class="right-radius-svg">
+            <path d="M0 -4H60V56H32C14.3269 56 0 41.6731 0 24V-4Z" fill="url(#paint0_linear_103_946)" />
+            <path
+              d="M40.6191 33.3097L34.439 26.8264L31.2412 30.1787L37.4258 36.662C37.9333 37.194 38.7687 37.194 39.2762 36.662L40.6191 35.2542C41.1267 34.7175 41.1267 33.8371 40.6191 33.3097Z"
+              fill="#FEFDFE" />
+            <path
+              d="M31.3809 28.7333L33.0562 26.9772L31.1474 24.9761C32.9529 22.2501 32.7014 18.474 30.3839 16.0446C27.7834 13.3185 23.557 13.3185 20.952 16.0446C18.3471 18.7706 18.3516 23.2011 20.952 25.9319C23.2696 28.3614 26.8716 28.625 29.4721 26.7323L31.3809 28.7333ZM22.2456 24.5571C20.3592 22.5796 20.3592 19.3733 22.2456 17.4005C24.1319 15.4231 27.1905 15.4231 29.0724 17.4005C30.9588 19.378 30.9588 22.5843 29.0724 24.5571C27.1905 26.5346 24.1319 26.5346 22.2456 24.5571Z"
+              fill="#FEFDFE" />
+            <defs>
+              <linearGradient id="paint0_linear_103_946" x1="5.5" y1="-4" x2="60" y2="47"
+                gradientUnits="userSpaceOnUse">
+                <stop stop-color="#041643" />
+                <stop offset="1" stop-color="#3E5ADF" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+        </div>
+        </div>
+
+        <!--  Buttons Grid -->
+        <div class="labels-grid">
+          <button
+            *ngFor="let label of pageLabelsbank"
+            class="btn account-btn"
+            [ngClass]="{ selected: selectedLabelbank === label }"
+            (click)="onLabelSelect(label, 'bank')"
+          >
+            {{ label }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

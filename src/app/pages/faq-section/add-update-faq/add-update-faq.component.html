@@ -1,0 +1,62 @@
+<div class="d-flex justify-content-between align-items-center mx-3 mt-3 p-1 save-bar">
+  <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-4 text-dark back-arrow"></i>
+  <button class="me-4 w-10 back-btn place-self-end save-btn" (click)="save()">Save Changes</button>
+</div>
+
+<div class="row m-3 pb-5">
+  
+  <div class="col-md-6">
+    <div class="card p-4 shadow">
+
+      
+      <div class="mb-3">
+        <label class="form-label">FAQ Category<span class="text-danger">*</span></label>
+        <select class="form-select"
+                [(ngModel)]="faqsData.category_id"
+                #categoryCtrl="ngModel"
+                (ngModelChange)="changeValidity('category')"
+                [class.is-invalid]="!isFieldsValid.category && clickOnSave">
+          <option value="" disabled>Select category</option>
+          <option *ngFor="let obj of categorylist" [value]="obj.category_id">{{ obj.categoryname }}</option>
+        </select>
+        <div *ngIf="!isFieldsValid.category && clickOnSave" class="invalid-feedback d-block">
+          Please select a category.
+        </div>
+      </div>
+
+      
+      <div class="mb-3">
+        <label class="form-label">Title <span class="text-danger">*</span></label>
+        <input type="text"
+               [(ngModel)]="faqsData.title"
+               #titleCtrl="ngModel"
+               (ngModelChange)="changeValidity('title')"
+               [class.is-invalid]="!isFieldsValid.title && clickOnSave"
+               class="form-control py-2"
+               placeholder="Enter FAQ title">
+        <div *ngIf="!isFieldsValid.title && clickOnSave" class="invalid-feedback d-block">
+          Title is required.
+        </div>
+      </div>
+
+      
+      <div class="mb-3">
+        <label class="form-label">Device Type</label>
+        <input type="text" [(ngModel)]="faqsData.type" class="form-control py-2" readonly />
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="col-md-6">
+    <div class="card p-3 shadow mb-3">
+      <label class="form-label">Description<span class="text-danger">*</span></label>
+      <div id="editor-container" style="background: #fff;"
+           [class.is-invalid]="!isFieldsValid.description && clickOnSave"></div>
+      <div *ngIf="!isFieldsValid.description && clickOnSave" class="invalid-feedback d-block">
+        Description is required.
+      </div>
+    </div>
+  </div>
+</div>

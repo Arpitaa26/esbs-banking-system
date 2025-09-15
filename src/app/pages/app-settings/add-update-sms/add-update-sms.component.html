@@ -1,0 +1,58 @@
+<!-- Top Save Bar -->
+<div class="d-flex justify-content-between align-items-center mx-3 mt-2 p-1 save-bar">
+  <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-4 text-dark back-arrow" style="cursor:pointer;"></i>
+  <button class="me-4 btn btn-primary save-btn" (click)="save()" [disabled]="isBusy">
+    {{ isNew ? 'Create SMS' : 'Update SMS' }}
+  </button>
+</div>
+
+<div class="row mx-3 mt-1 ps-1 pb-5">
+  <div class="col-12 p-3 mt-1 left-card">
+    <div class="row g-3">
+
+      <div class="col-md-6">
+        <label class="form-label">Subject <span class="text-danger">*</span></label>
+        <input type="text" [(ngModel)]="sms.type"
+          #typeCtrl="ngModel"
+          (ngModelChange)="changeValidity('type')"
+          class="form-control py-2"
+          [class.is-invalid]="!isFieldsValid.type && clickOnSave"
+          placeholder="Enter subject"
+          [disabled]="isBusy" />
+        <div *ngIf="!isFieldsValid.type && clickOnSave" class="invalid-feedback d-block">
+          Subject is required.
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Purpose <span class="text-danger">*</span></label>
+        <input type="text" [(ngModel)]="sms.purpose"
+          #purposeCtrl="ngModel"
+          (ngModelChange)="changeValidity('purpose')"
+          class="form-control py-2"
+          [class.is-invalid]="!isFieldsValid.purpose && clickOnSave"
+          placeholder="Enter purpose"
+          [disabled]="isBusy" />
+        <div *ngIf="!isFieldsValid.purpose && clickOnSave" class="invalid-feedback d-block">
+          Purpose is required.
+        </div>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Message <span class="text-danger">*</span></label>
+        <textarea [(ngModel)]="sms.msg"
+          #msgCtrl="ngModel"
+          (ngModelChange)="changeValidity('msg')"
+          class="form-control py-2 auto-grow-textarea"
+          rows="4"
+          placeholder="Enter message"
+          [class.is-invalid]="!isFieldsValid.msg && clickOnSave"
+          [disabled]="isBusy"></textarea>
+        <div *ngIf="!isFieldsValid.msg && clickOnSave" class="invalid-feedback d-block">
+          Message is required.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

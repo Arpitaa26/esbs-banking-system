@@ -1,0 +1,95 @@
+<div class="d-flex justify-content-between align-items-center mx-3 mt-2 p-1 save-bar">
+  <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-4 text-dark back-arrow"></i>
+</div>
+<div class="row mx-3 mt-1 ps-1 pb-5">
+  <div class="col-12 p-3 mt-1 left-card">
+    <div class="row g-3 d-flex ml-3">
+
+      <div class="col-6" *ngIf="apilogsview.type">
+        <label class="form-label">Type</label>
+        <input type="text" class="form-control py-2 bg-dark text-warning" [(ngModel)]="apilogsview.type" disabled>
+      </div>
+
+      <div class="col-6" *ngIf="apilogsview.created_date">
+        <label class="form-label">Create Date</label>
+        <input type="text" class="form-control py-2 bg-dark text-warning" [(ngModel)]="apilogsviewData"
+          disabled>
+      </div>
+
+      <div class="col-12" *ngIf="apilogsview.url">
+        <label class="form-label">URL</label>
+        <input type="text" class="form-control py-2 bg-dark text-warning" [(ngModel)]="apilogsview.url" disabled>
+      </div>
+
+      <div class="col-12" *ngIf="apilogsview.requestbody">
+        <label class="form-label">Request Data</label>
+        <div class="col-12 json-viewer" *ngIf="apilogsview.requestbody"
+          [ngStyle]="{ 'max-height': expandedRequest ? 'max-content' : '200px', 'overflow': 'auto' }">
+          <label class="d-flex justify-content-end align-items-center">
+            <div>
+              <button class="btn btn-sm btn-secondary me-2 bg-success" (click)="toggleExpand('request')">
+                <i class="bi" [class.bi-arrows-angle-contract]="expandedRequest"
+                  [class.bi-arrows-angle-expand]="!expandedRequest"></i>
+                {{ expandedRequest ? ' Collapse' : ' Expand' }}
+              </button>
+              <button class="btn btn-sm btn-secondary me-2 text-dark fw-bolder" [class.bg-warning]="!copyStates.request"
+                [class.bg-success]="copyStates.request" (click)="copyToClipboard(apilogsview.requestbody, 'request')">
+                <i class="bi" [class.bi-clipboard]="!copyStates.request"
+                  [class.bi-clipboard-check]="copyStates.request"></i>
+                {{ copyStates.request ? ' Copied!' : ' Copy' }}
+              </button>
+            </div>
+          </label>
+          <pre><code [innerHTML]="formatJSON_request" class="text-warning"></code></pre>
+        </div>
+      </div>
+
+      <div class="col-12" *ngIf="apilogsview.headers">
+        <label class="form-label">Header Data</label>
+        <div class="col-12 json-viewer" *ngIf="apilogsview.headers"
+          [ngStyle]="{ 'max-height': expandedHeaders ? 'max-content' : '200px', 'overflow': 'auto' }">
+          <label class="d-flex justify-content-end align-items-center">
+            <div>
+              <button class="btn btn-sm btn-secondary me-2 bg-success" (click)="toggleExpand('headers')">
+                <i class="bi" [class.bi-arrows-angle-contract]="expandedHeaders"
+                  [class.bi-arrows-angle-expand]="!expandedHeaders"></i>
+                {{ expandedHeaders ? ' Collapse' : ' Expand' }}
+              </button>
+              <button class="btn btn-sm btn-secondary me-2 text-dark fw-bolder" [class.bg-warning]="!copyStates.headers"
+                [class.bg-success]="copyStates.headers" (click)="copyToClipboard(apilogsview.headers, 'headers')">
+                <i class="bi" [class.bi-clipboard]="!copyStates.headers"
+                  [class.bi-clipboard-check]="copyStates.headers"></i>
+                {{ copyStates.headers ? ' Copied!' : ' Copy' }}
+              </button>
+            </div>
+          </label>
+          <pre><code [innerHTML]="formatJSON_headers" class="text-warning"></code></pre>
+        </div>
+      </div>
+
+      <div class="col-12" *ngIf="apilogsview.responsebody">
+        <label class="form-label">Response Data</label>
+        <div class="col-12 json-viewer"
+          [ngStyle]="{ 'max-height': expandedResponse ? 'max-content' : '200px', 'overflow': 'auto' }">
+          <label class="d-flex justify-content-end align-items-center">
+            <div>
+              <button class="btn btn-sm btn-secondary me-2 bg-success" (click)="toggleExpand('response')">
+                <i class="bi" [class.bi-arrows-angle-contract]="expandedResponse"
+                  [class.bi-arrows-angle-expand]="!expandedResponse"></i>
+                {{ expandedResponse ? ' Collapse' : ' Expand' }}
+              </button>
+              <button class="btn btn-sm btn-secondary me-2 text-dark fw-bolder"
+                [class.bg-warning]="!copyStates.response" [class.bg-success]="copyStates.response"
+                (click)="copyToClipboard(apilogsview.responsebody, 'response')">
+                <i class="bi" [class.bi-clipboard]="!copyStates.response"
+                  [class.bi-clipboard-check]="copyStates.response"></i>
+                {{ copyStates.response ? ' Copied!' : ' Copy' }}
+              </button>
+            </div>
+          </label>
+          <pre><code [innerHTML]="formatJSON_response" class="text-warning"></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

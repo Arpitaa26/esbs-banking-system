@@ -1,0 +1,18 @@
+<div class="card p-4 card-custom-shadow">
+  <div class="tabs-container d-flex">
+    <div class="sidebar">
+      <button routerLink="user-profile" routerLinkActive="active-tab" class="tab-btn">User Profile</button>
+      
+     <button routerLink="savings" routerLinkActive="active-tab" class="tab-btn">Savings</button>
+
+
+      <button routerLink="audit-logs" routerLinkActive="active-tab" class="tab-btn">Audit Logs</button>
+      <button routerLink="marketing-refrences" routerLinkActive="active-tab" class="tab-btn">Marketing
+        Preferences</button>
+    </div>
+    <div class="vertical-divider"></div>
+    <div class="tab-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

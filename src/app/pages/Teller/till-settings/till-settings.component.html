@@ -1,0 +1,351 @@
+<div class="nav-tabs">
+  <button *ngFor="let tab of tabs" [class]="'tab-button ' + (tab.active ? 'active' : '')"
+    (click)="selectTab(tab.value)">
+    {{ tab.name }}
+  </button>
+</div>
+
+
+<div
+  [ngClass]="{'audit-dashboard': this.activeTab !== 'third party', 'third-party-dashboard': this.activeTab == 'third party'}"
+  class="soft-panel">
+  <!-- Navigation Tabs -->
+
+  <!-- general -->
+  <div *ngIf="this.activeTab == 'general'">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Auto Logout (minutes)</label>
+        <input type="number" class="form-control" [(ngModel)]="form.auto_logout" name="auto_logout">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Reconcile</label>
+        <select class="form-select" [(ngModel)]="form.reconcile">
+          <option *ngFor="let option of reconcileOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Junior Account Threshold (£)</label>
+        <input type="number" class="form-control" [(ngModel)]="form.junior_account_threshold"
+          name="junior_account_threshold">
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Restricted Countries</label>
+        <div class="d-flex flex-wrap gap-2 mb-2 list-box">
+          <p *ngIf="!form.restricted_countries.length">Add Restricted Country</p>
+          <span *ngFor="let country of form.restricted_countries; let i = index" class="cursor-pointer tag">
+            <i class="bi bi-flag"></i> {{ country.name }}
+            <i class="bi bi-x-circle ms-2 cursor-pointer" (click)="removeRestrictedCountry(i)"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Add Country</label>
+        <div class="position-relative w-100">
+          <input type="text" class="form-control custom-dropdown-input" [(ngModel)]="newRestrictedCountry"
+            (input)="filterCountryList()" (focus)="onInputFocus()" (blur)="hideCountryDropdown()"
+            placeholder="Enter country name" autocomplete="off" name="restricted_country" />
+          <i class="fa fa-chevron-down dropdown-icon"></i>
+
+          <ul *ngIf="showCountryDropdown && filteredCountries.length" class="dropdown-list">
+            <li *ngFor="let country of filteredCountries" (mousedown)="selectCountry(country.name)">
+              {{ country.name }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Address Proof (18+)</label>
+        <div class="d-flex flex-wrap gap-2 mb-2 list-box">
+          <p *ngIf="!form.address_proff.length">Add Address Proof</p>
+          <span *ngFor="let item of form.address_proff; let i = index" class="cursor-pointer tag">
+            <i class="bi bi-file-earmark-text"></i> {{ item.name }}
+            <i class="bi bi-x-circle ms-2 cursor-pointer" (click)="removeAddressProof(i)"></i>
+          </span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Add Address Proof</label>
+        <div class="d-flex align-items-end">
+          <input type="text" class="form-control" [(ngModel)]="newAddressProof" placeholder="Enter address proof" />
+          <button class="btn btn-primary add-button ms-2" (click)="addAddressProof()">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">ID Proof (18+)</label>
+        <div class="d-flex flex-wrap gap-2 mb-2 list-box">
+          <p *ngIf="!form.id_proff.length">Add ID Proof</p>
+          <span *ngFor="let item of form.id_proff; let i = index" class="cursor-pointer tag">
+            <i class="bi bi-file-earmark-text"></i> {{ item.name }}
+            <i class="bi bi-x-circle ms-2 cursor-pointer" (click)="removeIdProof(i)"></i>
+          </span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Add ID Proof</label>
+        <div class="d-flex align-items-end">
+          <input type="text" class="form-control" [(ngModel)]="newIdProof" placeholder="Enter ID proof" />
+          <button class="btn btn-primary add-button ms-2" (click)="addIdProof()">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Junior Address Proof</label>
+        <div class="d-flex flex-wrap gap-2 mb-2 list-box">
+          <p *ngIf="!form.junior_Address_proff.length">Add Address Proof</p>
+          <span *ngFor="let item of form.junior_Address_proff; let i = index" class="cursor-pointer tag">
+            <i class="bi bi-file-earmark-text"></i> {{ item.name }}
+            <i class="bi bi-x-circle ms-2 cursor-pointer" (click)="removeJuniorAddressProof(i)"></i>
+          </span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Add Address Proof</label>
+        <div class="d-flex align-items-end">
+          <input type="text" class="form-control" [(ngModel)]="newJuniorAddressProof"
+            placeholder="Enter address proof" />
+          <button class="btn btn-primary add-button ms-2" (click)="addJuniorAddressProof()">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Junior ID Proof</label>
+        <div class="d-flex flex-wrap gap-2 mb-2 list-box">
+          <p *ngIf="!form.junior_id_proff.length">Add ID Proof</p>
+          <span *ngFor="let item of form.junior_id_proff; let i = index" class="cursor-pointer tag">
+            <i class="bi bi-file-earmark-text"></i> {{ item.name }}
+            <i class="bi bi-x-circle ms-2 cursor-pointer" (click)="removeJuniorIdProof(i)"></i>
+          </span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Add ID Proof</label>
+        <div class="d-flex align-items-end">
+          <input type="text" class="form-control" [(ngModel)]="newJuniorIdProof" placeholder="Enter ID proof" />
+          <button class="btn btn-primary add-button ms-2" (click)="addJuniorIdProof()">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <!-- Shared Sources of Fund -->
+      <div class="col-md-6">
+        <label class="form-label">Source of funds</label>
+        <div class="d-flex flex-wrap gap-2 mb-2 list-box">
+          <span *ngFor="let source of availableSources; let i = index" class="cursor-pointer tag">
+            <i class="bi bi-wallet2 "></i>
+            {{ source.name }}
+            <i class="bi bi-x-circle ms-2 cursor-pointer" (click)="removeSource(i)"></i>
+          </span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Add source</label>
+        <div class="d-flex align-items-end">
+          <input type="text" class="form-control" [(ngModel)]="newSharedSource" placeholder="Enter source"
+            name="add_source">
+
+          <button class="btn btn-primary add-button" (click)="addSharedSource()">Add</button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="row mb-3">
+      <!-- Purpose of withdrawal -->
+      <div class="col-md-6">
+        <label class="form-label">Purpose of withdrawal</label>
+        <div class="d-flex flex-wrap gap-2 mb-2 list-box">
+          <span *ngFor="let source of availablePurpose; let i = index" class="cursor-pointer tag">
+            <i class="bi bi-wallet2 "></i>
+            {{ source.name }}
+            <i class="bi bi-x-circle ms-2 cursor-pointer" (click)="removePurpose(i)"></i>
+          </span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Add Purpose</label>
+        <div class="d-flex align-items-end">
+          <input type="text" class="form-control" [(ngModel)]="newSharedPurpose" placeholder="Enter Purpose"
+            name="add_source">
+          <button class="btn btn-primary add-button" (click)="addSharedPurpose()">Add</button>
+        </div>
+
+
+      </div>
+
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Customer verification document types</label>
+        <div class="d-flex flex-wrap gap-2 mb-2 list-box">
+          <span *ngFor="let doc of availableDocuments; let j = index" class="cursor-pointer tag">
+            <i class="bi bi-file-earmark-text "></i>
+            {{ doc.name }}
+            <i class="bi bi-x-circle ms-2 cursor-pointer" (click)="removeDocument(j)"></i>
+
+          </span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Add document type</label>
+        <div class=" d-flex align-items-end">
+          <input type="text" class="form-control" [(ngModel)]="newSharedDocument" placeholder="Enter document type"
+            name="add_doc">
+          <button class="btn btn-primary add-button" (click)="addSharedDocument()">Add</button>
+        </div>
+
+
+      </div>
+
+    </div>
+  </div>
+  <!-- // third party -->
+  <div *ngIf="this.activeTab == 'third party'">
+
+    <div class="sub-header-third row mb-3">
+      <div class="col-md-4">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" [(ngModel)]="form.third_party_enabled">
+          <label class="form-label">Third Party Deposit</label>
+        </div>
+
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" [(ngModel)]="form.third_party.cash_allowed">
+          <label class="form-label">Cash</label>
+        </div>
+
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" [(ngModel)]="form.third_party.cheque_allowed">
+          <label class="form-label">Cheque</label>
+        </div>
+
+      </div>
+    </div>
+    <div class="third-party-body">
+      <app-teller-comman-setting-config *ngIf="form.third_party.cash_allowed && form.third_party_enabled"
+        [config]="form.third_party.cash_deposit" [sourceOptions]="availableSources"
+        [documentOptions]="availableDocuments" [purposeOptions]="availablePurpose"
+        (configChange)="onConfigChange($event)" (addSource)="onAddSource($event)"
+        (removeSource)="onRemoveSource($event)" (addThreshold)="onAddThreshold($event)"
+        (removeThreshold)="onRemoveThreshold($event)" (addDocument)="onAddDocument($event)"
+        (removeDocument)="onRemoveDocument($event)" (thresholdDocChange)="onThresholdDocChange($event)">
+      </app-teller-comman-setting-config>
+
+      <app-teller-comman-setting-config *ngIf="form.third_party.cheque_allowed && form.third_party_enabled"
+        [config]="form.third_party.cheque_deposit" [sourceOptions]="availableSources"
+        [documentOptions]="availableDocuments" [purposeOptions]="availablePurpose"
+        (configChange)="onConfigChange($event)" (addSource)="onAddSource($event)"
+        (removeSource)="onRemoveSource($event)" (addThreshold)="onAddThreshold($event)"
+        (removeThreshold)="onRemoveThreshold($event)" (addDocument)="onAddDocument($event)"
+        (removeDocument)="onRemoveDocument($event)" (thresholdDocChange)="onThresholdDocChange($event)">
+      </app-teller-comman-setting-config>
+    </div>
+
+  </div>
+
+  <!-- // customer deposit -->
+  <div *ngIf="this.activeTab == 'customer deposit'">
+    <app-teller-comman-setting-config [config]="form.customer.cash_deposit" [sourceOptions]="availableSources"
+      [documentOptions]="availableDocuments" [purposeOptions]="availablePurpose" (configChange)="onConfigChange($event)"
+      (addSource)="onAddSource($event)" (removeSource)="onRemoveSource($event)" (addThreshold)="onAddThreshold($event)"
+      (removeThreshold)="onRemoveThreshold($event)" (addDocument)="onAddDocument($event)"
+      (removeDocument)="onRemoveDocument($event)" (thresholdDocChange)="onThresholdDocChange($event)">
+    </app-teller-comman-setting-config>
+
+    <app-teller-comman-setting-config [config]="form.customer.cheque_deposit" [sourceOptions]="availableSources"
+      [documentOptions]="availableDocuments" [purposeOptions]="availablePurpose" (configChange)="onConfigChange($event)"
+      (addSource)="onAddSource($event)" (removeSource)="onRemoveSource($event)" (addThreshold)="onAddThreshold($event)"
+      (removeThreshold)="onRemoveThreshold($event)" (addDocument)="onAddDocument($event)"
+      (removeDocument)="onRemoveDocument($event)" (thresholdDocChange)="onThresholdDocChange($event)">
+    </app-teller-comman-setting-config>
+  </div>
+
+  <!-- // customer withdrawal -->
+  <div *ngIf="this.activeTab == 'customer withdrawal'">
+    <app-teller-comman-setting-config [config]="form.customer.cash_withdrwal" [sourceOptions]="availableSources"
+      [documentOptions]="availableDocuments" [purposeOptions]="availablePurpose" (configChange)="onConfigChange($event)"
+      (addSource)="onAddSource($event)" (removeSource)="onRemoveSource($event)" (addThreshold)="onAddThreshold($event)"
+      (removeThreshold)="onRemoveThreshold($event)" (addDocument)="onAddDocument($event)"
+      (removeDocument)="onRemoveDocument($event)" (thresholdDocChange)="onThresholdDocChange($event)">
+    </app-teller-comman-setting-config>
+
+    <app-teller-comman-setting-config [config]="form.customer.cheque_withdrawal" [sourceOptions]="availableSources"
+      [documentOptions]="availableDocuments" [purposeOptions]="availablePurpose" (configChange)="onConfigChange($event)"
+      (addSource)="onAddSource($event)" (removeSource)="onRemoveSource($event)" (addThreshold)="onAddThreshold($event)"
+      (removeThreshold)="onRemoveThreshold($event)" (addDocument)="onAddDocument($event)"
+      (removeDocument)="onRemoveDocument($event)" (thresholdDocChange)="onThresholdDocChange($event)">
+    </app-teller-comman-setting-config>
+  </div>
+
+  <!-- // transfer -->
+  <div *ngIf="this.activeTab == 'transfer'">
+    <app-teller-comman-setting-config [config]="form.customer.transfer_saving_transfer"
+      [sourceOptions]="availableSources" [documentOptions]="availableDocuments" [purposeOptions]="availablePurpose"
+      (configChange)="onConfigChange($event)" (addSource)="onAddSource($event)" (removeSource)="onRemoveSource($event)"
+      (addThreshold)="onAddThreshold($event)" (removeThreshold)="onRemoveThreshold($event)"
+      (addDocument)="onAddDocument($event)" (removeDocument)="onRemoveDocument($event)"
+      (thresholdDocChange)="onThresholdDocChange($event)">
+    </app-teller-comman-setting-config>
+
+    <app-teller-comman-setting-config [config]="form.customer.transfer_mortgage_transfer"
+      [sourceOptions]="availableSources" [documentOptions]="availableDocuments" [purposeOptions]="availablePurpose"
+      (configChange)="onConfigChange($event)" (addSource)="onAddSource($event)" (removeSource)="onRemoveSource($event)"
+      (addThreshold)="onAddThreshold($event)" (removeThreshold)="onRemoveThreshold($event)"
+      (addDocument)="onAddDocument($event)" (removeDocument)="onRemoveDocument($event)"
+      (thresholdDocChange)="onThresholdDocChange($event)">
+    </app-teller-comman-setting-config>
+
+    <app-teller-comman-setting-config [config]="form.customer.transfer_nba_transfer" [sourceOptions]="availableSources"
+      [documentOptions]="availableDocuments" [purposeOptions]="availablePurpose" (configChange)="onConfigChange($event)"
+      (addSource)="onAddSource($event)" (removeSource)="onRemoveSource($event)" (addThreshold)="onAddThreshold($event)"
+      (removeThreshold)="onRemoveThreshold($event)" (addDocument)="onAddDocument($event)"
+      (removeDocument)="onRemoveDocument($event)" (thresholdDocChange)="onThresholdDocChange($event)">
+    </app-teller-comman-setting-config>
+
+    <app-teller-comman-setting-config [config]="form.customer.transfer_external_transfer"
+      [sourceOptions]="availableSources" [documentOptions]="availableDocuments" [purposeOptions]="availablePurpose"
+      (configChange)="onConfigChange($event)" (addSource)="onAddSource($event)" (removeSource)="onRemoveSource($event)"
+      (addThreshold)="onAddThreshold($event)" (removeThreshold)="onRemoveThreshold($event)"
+      (addDocument)="onAddDocument($event)" (removeDocument)="onRemoveDocument($event)"
+      (thresholdDocChange)="onThresholdDocChange($event)">
+    </app-teller-comman-setting-config>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 display-right">
+      <button [ngClass]="{'marginRight20': this.activeTab == 'third party'}" class="btn btn-primary save-button"
+        (click)="saveConfigjson()">Save</button>
+    </div>
+  </div>
+
+
+</div>

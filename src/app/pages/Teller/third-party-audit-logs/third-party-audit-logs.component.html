@@ -1,0 +1,81 @@
+<div class="audit-dashboard soft-panel">
+  <div class="tab-content">
+    <div class="controls-section">
+      <div class="filters-row">
+        <div class="filter-group">
+          <label for="apiType">API Type</label>
+          <select id="apiType" class="filter-select" [(ngModel)]="selectedApiType">
+            <option *ngFor="let type of apiTypes" [value]="type">{{ type }}</option>
+          </select>
+        </div>
+        <!-- <div class="filter-group">
+          <label for="searchText">Search Text</label>
+          <input
+            id="searchText"
+            type="text"
+            class="filter-input"
+            placeholder="Search Url, Api, details..."
+            [(ngModel)]="searchTerm"
+            (keyup.enter)="onSearch()"
+          />
+        </div> -->
+        <div class="filter-group">
+          <label for="fromDate">From Date</label>
+          <input id="fromDate" type="date" class="filter-input date-input" [(ngModel)]="fromDate"
+            (change)="onFromDateChange()" />
+        </div>
+
+        <div class="filter-group">
+          <label for="toDate">To Date</label>
+          <input id="toDate" type="date" class="filter-input date-input" [(ngModel)]="toDate"
+            [min]="fromDate || today" />
+        </div>
+      </div>
+      <div class="action-buttons-row">
+        <div class="filter-actions">
+          <button class="search-btn" (click)="onSearch()" [disabled]="isLoading">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+            {{ isLoading ? 'Searching...' : 'Search' }}
+          </button>
+          <button class="clear-btn" (click)="clearFilters()" [disabled]="isLoading">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18" />
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+              <line x1="10" x2="10" y1="11" y2="17" />
+              <line x1="14" x2="14" y1="11" y2="17" />
+            </svg>
+            Clear
+          </button>
+        </div>
+        <div class="download-buttons">
+          <button class="download-btn" (click)="downloadJSON()" [disabled]="filteredAuditList.length === 0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7,10 12,15 17,10" />
+              <line x1="12" x2="12" y1="15" y2="3" />
+            </svg>
+            Download JSON
+          </button>
+          <button class="download-btn" (click)="downloadCSV()" [disabled]="filteredAuditList.length === 0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7,10 12,15 17,10" />
+              <line x1="12" x2="12" y1="15" y2="3" />
+            </svg>
+            Download CSV
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="table-container">
+      <app-dynamic-table [data]="filteredAuditList" [columns]="tableColumns" [withCheckbox]="false"
+        [rowsPerPage]="itemsPerPage" [enablePagination]="true" [dataCount]="dataCount" (pageChange)="goToPage($event)"
+        (rowClick)="onRowClick($event)" (pageSizeChange)="onPageSizeChanged($event)">
+      </app-dynamic-table>
+    </div>
+  </div>
+</div>

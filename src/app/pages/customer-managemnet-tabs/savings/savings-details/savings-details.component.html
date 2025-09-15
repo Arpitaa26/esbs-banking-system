@@ -1,0 +1,13 @@
+<div class="savings-container card-custom-shadow p-4" *ngIf="savings && customerInfo">
+  <div>
+    <h2 class="user-name">{{ customerInfo.fullname }} </h2>
+    <p class="mb-0"><strong>Phoebus Reference Number: {{ customerInfo.memberid }}</strong></p>
+    <p class="mb-0"><strong>Account Number: {{ savings?.accountno }}</strong></p>
+    <p class="mb-0"><strong>Balance: {{ savings?.balance }}</strong></p>
+    <p class="mb-0"><strong>Available Balance: {{ savings?.available }}</strong></p>
+  </div>
+  <div class="tab-content" style="width:100%; margin-right: 300px;">
+    <table [options]="savingsDetailsOptions"></table> 
+  </div>
+  
+</div>

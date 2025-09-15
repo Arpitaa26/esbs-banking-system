@@ -1,0 +1,44 @@
+
+
+.account-dropdown {
+  width: 230px;
+  box-sizing: border-box;
+  margin-left: 120px;
+  margin-top: 0;
+  margin-right: 0;
+  display:block;
+position: absolute;
+    right: 60px;
+    top: 32px;
+}
+
+
+.btn-outline-custom {
+  padding: 5px 28px;
+  border: 1px solid rgb(17, 19, 61);
+  color: #041643;
+  background-color: transparent;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #041643;
+    color: #fff;
+    border-color: rgb(25, 27, 75);
+  }
+}
+// .savings-container.card-custom-shadow {
+//     margin-top: -60px;
+// }
+// .dropdown-box {
+//     float: right;
+//     margin-right: 70px;
+// }
+
+
+.upper-box{
+  position: relative;
+}
+
+.whole {
+  width: 940px;
+}

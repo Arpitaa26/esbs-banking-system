@@ -1,0 +1,49 @@
+<segment [segbuttons]="segbuttonConfig" (segbuttonClicked)="seghandleClick($event)" class="mt-2"></segment>
+
+<!-- Soopra API Tab -->
+<div [hidden]="currentTab !== 'soopra_api'" class="stop-tab-content">
+  <div class="message-box">
+   <textarea  [(ngModel)]="messageText"
+  rows="6"
+  style=" width: 100%; max-width:850px; resize: both; border:none;  background: #f0f4ff; "></textarea>
+  </div>
+  <button class="stop-button" (click)="handleStopSopra()" *ngIf="sopra_status === 0">STOP</button>
+  <button class="stop-button" (click)="handleStopSopra()" *ngIf="sopra_status === 1">START</button>
+</div>
+
+<!-- App & Online Tab -->
+<div [hidden]="currentTab !== 'app_online'" class="stop-tab-content">
+  <div class="stop-wrapper">
+
+    <!-- Message Box -->
+    <!-- <div class="message-box">
+      <input type="text" [(ngModel)]="messageTextOnline" class="message-input" />
+    </div> -->
+
+    <!-- Left Card -->
+    <div class="left-card mt-3">
+      <div class="mb-3">
+        <!-- <label class="form-label">Title</label> -->
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="message.title"
+          placeholder="Product Title"
+          />
+          <!-- (input)="updatePreview()"  -->
+      </div>
+
+      <div class="mb-3">
+        <!-- <label class="form-label">Body</label> -->
+        <div id="editor-container"></div>
+      </div>
+    </div>
+
+    <!-- STOP Button -->
+    <div class="text-center mt-4">
+      <button class="stop-button" (click)="handleStop()" *ngIf="enableapi == false">STOP</button>
+      <button class="stop-button" (click)="handleStop()" *ngIf="enableapi">START</button>
+    </div>
+
+  </div>
+</div>

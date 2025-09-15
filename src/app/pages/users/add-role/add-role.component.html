@@ -1,0 +1,67 @@
+<div class="d-flex justify-content-between align-items-center mx-3 mt-2 p-1 main">
+    <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-4 text-dark back-arrow"></i>
+    <button (click)="onSave()" class="me-4 w-10 back-btn place-self-end save-btn">Save
+        Changes</button>
+</div>
+<div class="m-3 p-3 main pb-5">
+    <div class="col-4 ms-2">
+        <label class="form-label">User Role Name</label>
+        <input class="form-control py-2" type="text" placeholder="Enter or edit user role name"
+            [(ngModel)]="selectedRole" name="selectedRole" />
+    </div>
+    <div class="permissions-container">
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 mb-4" *ngFor="let item of defaultFunctionality;">
+                            <div class="permission-card h-100">
+                                <div class="permission-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1 text-truncate">{{ item.name }}</h6>
+                                            <!-- <small class="opacity-75 d-block" *ngIf="item.description">
+                                                {{ item.description }}
+                                            </small> -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="permission-grid">
+                                    <label class="permission-item">
+                                        <input type="checkbox" class="form-check-input menu-checkbox"
+                                            [(ngModel)]="item.permissions.create">
+                                        <span class="permission-label">
+                                            Create
+                                        </span>
+                                    </label>
+                                    <label class="permission-item">
+                                        <input type="checkbox" class="form-check-input menu-checkbox"
+                                            [(ngModel)]="item.permissions.read">
+                                        <span class="permission-label">
+                                            Read
+                                        </span>
+                                    </label>
+                                    <label class="permission-item">
+                                        <input type="checkbox" class="form-check-input menu-checkbox"
+                                            [(ngModel)]="item.permissions.update">
+                                        <span class="permission-label">
+                                            Update
+                                        </span>
+                                    </label>
+                                    <label class="permission-item">
+                                        <input type="checkbox" class="form-check-input menu-checkbox"
+                                            [(ngModel)]="item.permissions.delete">
+                                        <span class="permission-label">
+                                            Delete
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

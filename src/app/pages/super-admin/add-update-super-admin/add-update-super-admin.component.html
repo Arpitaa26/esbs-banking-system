@@ -1,0 +1,80 @@
+<div class="d-flex justify-content-between align-items-center mx-3 mt-2 p-1 save-bar">
+  <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-4 text-dark back-arrow"></i>
+  <button class="me-4 w-10 back-btn place-self-end save-btn" (click)="submit()">Save changes</button>
+</div>
+
+<div class="row mx-3 mt-1 ps-1">
+  <div class="col-12 p-3 mt-1 left-card">
+    <div class="row g-3 d-flex ml-3">
+
+      <div class="col-6">
+        <label class="form-label">Devices Type</label>
+        <input type="text" class="form-control py-2" [(ngModel)]="formData.devicetype" readonly />
+      </div>
+
+      <div class="col-6">
+        <label class="form-label">App Version</label>
+        <input type="text" class="form-control py-2" [(ngModel)]="formData.version" placeholder="Enter version" />
+      </div>
+
+      <div class="col-6">
+        <label class="form-label">App Name</label>
+        <input type="text" class="form-control py-2" [(ngModel)]="formData.appname" placeholder="Enter name" />
+      </div>
+
+      <div class="col-6">
+        <label class="form-label">App URL</label>
+        <input type="text" class="form-control py-2" [(ngModel)]="formData.appurl" placeholder="Enter URL" />
+      </div>
+
+      <div class="col-4 d-flex align-items-center">
+  <input
+    type="checkbox"
+    class="form-check-input me-2 round-checkbox"
+    [(ngModel)]="formData.islive"
+    (change)="formData.islive = formData.islive ? 1 : 0"
+    id="isLive"
+  />
+  <label for="isLive" class="form-label m-0">Is Live</label>
+</div>
+
+<div class="col-4 d-flex align-items-center">
+  <input
+    type="checkbox"
+    class="form-check-input me-2 round-checkbox"
+    [(ngModel)]="formData.forced"
+    (change)="formData.forced = formData.forced ? 1 : 0"
+    id="isForced"
+  />
+  <label for="isForced" class="form-label m-0">Is Forced</label>
+</div>
+<!---->
+ <div class="col-4 d-flex align-items-center">
+    <input
+      type="checkbox"
+      class="form-check-input me-2 round-checkbox"
+      [(ngModel)]="formData.ssl_change"
+      (change)="formData.ssl_change = formData.ssl_change ? 1 : 0"
+      id="isSSL"
+    />
+    <label for="isSSL" class="form-label m-0">Is SSL</label>
+  </div>
+
+
+   
+    <div class="row mt-3"  *ngIf="formData.forced || formData.ssl_change">
+  <div class="col-6">
+    <label class="form-label">Forced/SSL Update Message</label>
+    <input
+      type="text"
+      [(ngModel)]="formData.forced_message"
+      class="form-control"
+      placeholder="Enter message for Forced/SSL update"
+    />
+  </div>
+  </div>
+ 
+
+ 
+</div>
+</div>

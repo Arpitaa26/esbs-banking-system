@@ -1,0 +1,42 @@
+<div class="container-fluid login-page d-flex background-img">
+  <div class="row w-100 overflow-y-auto no-scroll-width">
+    <!-- Left Side Illustration -->
+    <div class="col-lg-6 col-sm-12 col-md-5">
+      <div class="pl-5 pr-5 pt-5" style="width: 85%">
+        <img src="image/left-img.png" alt="2FA Illustration" class="img-fluid illustration-img" />
+      </div>
+    </div>
+
+    <!-- Right Side Form -->
+    <div class="col-lg-6 col-md-7 col-sm-12 d-flex flex-column justify-content-center align-items-start px-5">
+      <div class="left-wrap">
+        <!-- Logo -->
+        <div class="d-flex align-items-center mb-4">
+          <img src="image/logo.png" alt="Logo" />
+        </div>
+
+        <!-- Heading -->
+        <div class="heading-txt">
+          <h1 class="hd-txt mb-4">We’ve sent you a code</h1>
+          <h5 class="sub-text mb-4">the code was sent to {{sent_on}}</h5>
+        </div>
+
+        <!-- otp -->
+        <div class="otp-container">
+          <div class="otp-inputs">
+            <input #otpInput *ngFor="let item of [].constructor(otpLength); let i = index" type="text" class="otp-box"
+              maxlength="1" inputmode="numeric" autocomplete="one-time-code" (input)="onInput($event, i)"
+              (keydown)="onKeyDown($event, i)" />
+          </div>
+          <p class="resend-text">
+            Resend code in 0:{{ countdown < 10 ? "0" + countdown : countdown }} </p>
+        </div>
+        <div class="button-wrapper">
+          <button class="continue-button" (click)="goToDashboard()">
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

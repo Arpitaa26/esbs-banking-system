@@ -1,0 +1,28 @@
+<div class="d-flex justify-content-between align-items-center mx-3 mt-2 p-1 main">
+  <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-4 text-dark back-arrow"></i>
+  <button class="me-4 w-10 back-btn place-self-end save-btn" (click)="save()">Save Changes</button>
+</div>
+<div class="m-3 p-3 main pb-5">
+  <div class="col-4 ms-2">
+    <label class="form-label">User Role Name</label>
+    <input class="form-control py-2" type="text" [(ngModel)]="selectedRole" placeholder="Enter or edit user role name"
+      name="selectedRole" />
+  </div>
+
+  <h5 class="m-1 text-center">Access Pages</h5>
+  <div class="row card2 mx-1">
+    <div *ngFor="let item of accessItems" class="col-md-4 mb-3">
+      <div class="card h-100 m-2">
+        <div class="card-body">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" [id]="'item-' + item.id" [(ngModel)]="item.checked"
+              [name]="'item-' + item.key" (change)="toggleCheck(item)" />
+            <label class="form-check-label ms-2" [for]="'item-' + item.id">
+              {{ item.title }} | {{ item.code }}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

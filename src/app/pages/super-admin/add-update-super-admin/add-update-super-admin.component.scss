@@ -1,0 +1,62 @@
+.save-bar {
+  padding: 9px;
+  border-radius: 9px;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 2px, rgba(0, 0, 0, 0.24) 0px 1px 2px !important;
+  background-color: #f7f9fe;
+}
+
+.back-arrow {
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.form-label {
+  font-family: 'Nunito', sans-serif;
+  color: #083A50;
+  font-weight: 500;
+}
+
+.left-card {
+  background: #f7f9fe;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 2px, rgba(0, 0, 0, 0.24) 0px 1px 2px !important;
+}
+
+.save-btn {
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 3px 18px 3px 18px;
+  background: linear-gradient(135deg, #041643, #3E5ADF);
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 12px, rgba(0, 0, 0, 0.24) 0px 1px 21px !important;
+}
+.round-checkbox {
+  transition: all 0.2s ease-in-out;
+  width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    cursor: pointer;
+    appearance: none;
+    outline: none;
+    border: 2px solid #0a1e55;
+    background-color: white;
+    transition: background 0.2s, border 0.2s;
+    vertical-align: middle;
+    position: relative;
+    margin: 3px;
+
+  &:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.00005 10.2L3.30005 7.5L2.33337 8.46667L6.00005 12.1333L14 4.13334L13.0334 3.16667L6.00005 10.2Z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 12px 12px;
+        background-color: #0a1e55;
+    border-color: #3E5ADF;
+  }
+}
+

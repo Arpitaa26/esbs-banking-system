@@ -1,0 +1,37 @@
+<div class="pagination-controls">
+    <select (change)="changePageSize($event)" class="pagination-dropdown">
+        <option *ngFor="let size of [10, 25, 50, 100,500]" [value]="size" [selected]="size === pagination.pageSize">
+            Showing {{ size }} per page
+        </option>
+    </select>
+
+    <button [ngClass]="getButtonClasses()" (click)="clickBeginning.emit()" [disabled]="pagination.page === 1"
+        title="First Page">
+        ⏪
+    </button>
+
+    <button [ngClass]="getButtonClasses()" (click)="clickPrevious.emit()" [disabled]="pagination.page === 1"
+        title="Previous Page">
+        ◀️
+    </button>
+
+    <button *ngIf="showRowCount" [ngClass]="{ 'small': small, 'large': large }" class="center-display"
+        (click)="toggle()">
+        {{ currentPageItemsMin }}-{{ currentPageItemsMax }} of {{ maxItems }}
+    </button>
+
+    <button *ngIf="!showRowCount" [ngClass]="{ 'small': small, 'large': large }" class="center-display"
+        (click)="toggle()">
+        Page {{ currentPage }} of {{ totalPages }}
+    </button>
+
+    <button [ngClass]="getButtonClasses()" (click)="clickNext.emit()"
+        [disabled]="pagination.page >= pagination.pageCount" title="Next Page">
+        ▶️
+    </button>
+
+    <button [ngClass]="getButtonClasses()" (click)="clickEnd.emit()"
+        [disabled]="pagination.page >= pagination.pageCount" title="Last Page">
+        ⏩
+    </button>
+</div>

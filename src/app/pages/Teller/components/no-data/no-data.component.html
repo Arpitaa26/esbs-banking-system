@@ -1,0 +1,16 @@
+<div class="no-data-container">
+  <div class="no-data-content">
+    <div class="no-data-icon" [innerHTML]="sanitizedIconSvg"></div>
+    <h2 class="no-data-title">{{ finalConfig.title }}</h2>
+    <p class="no-data-description">{{ finalConfig.description }}</p>
+    <button
+      *ngIf="finalConfig.showButton"
+      class="no-data-btn"
+      (click)="onButtonClick()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"></path>
+      </svg>
+      {{ finalConfig.buttonText }}
+    </button>
+  </div>
+</div>

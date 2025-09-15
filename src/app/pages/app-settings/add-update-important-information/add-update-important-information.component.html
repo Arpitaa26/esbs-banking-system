@@ -1,0 +1,44 @@
+<!-- Top Save Bar -->
+<div class="d-flex justify-content-between align-items-center mx-3 mt-2 p-1 save-bar">
+  <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-4 text-dark back-arrow" style="cursor:pointer;"></i>
+  <button class="me-4 w-10 back-btn place-self-end save-btn" (click)="save()" [disabled]="isBusy">
+    {{ isNew ? 'Add Info' : 'Save Changes' }}
+  </button>
+</div>
+
+<!-- Form Section -->
+<div class="row px-3 pb-5">
+  <div class="col-12 col-md-12">
+    <div class="col-12 p-3 mt-1 card">
+      <div class="row ml-3">
+
+        <!-- Title -->
+        <div class="mb-3">
+          <label class="form-label">Title <span class="text-danger">*</span></label>
+          <input type="text" class="form-control"
+                 [(ngModel)]="ImpInfo.title"
+                 (ngModelChange)="changeValidity('title')"
+                 [class.is-invalid]="!isFieldsValid.title && clickOnSave"
+                 placeholder="Product Title"
+                 [disabled]="isBusy">
+          <div *ngIf="!isFieldsValid.title && clickOnSave" class="invalid-feedback d-block">
+            Title is required.
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="mb-3">
+          <label class="form-label">Body <span class="text-danger">*</span></label>
+          <div #editorContainer id="editor-container"
+               [class.is-invalid]="!isFieldsValid.message && clickOnSave"
+               style="height: 300px; border:1px solid #ced4da; border-radius:4px;">
+          </div>
+          <div *ngIf="!isFieldsValid.message && clickOnSave" class="invalid-feedback d-block">
+            Message body is required.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

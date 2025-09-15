@@ -1,0 +1,21 @@
+<div class="w-100 h-100 pb-5">
+  <segment
+    [segbuttons]="segbuttonConfig1"
+    (segbuttonClicked)="seghandleClick1($event)"
+    class="mt-2"
+  ></segment>
+  <segment
+    *ngIf="currentMainTab === 'staff_users'"
+    [segbuttons]="segbuttonConfig2"
+    (segbuttonClicked)="seghandleClick2($event)"
+    class="mt-2"
+  ></segment>
+  <table
+    *ngIf="currentMainTab === 'staff_users'"
+    [options]="usersOptions"
+  ></table>
+  <table
+    *ngIf="currentMainTab === 'user_role'"
+    [options]="userRolesOptions"
+  ></table>
+</div>

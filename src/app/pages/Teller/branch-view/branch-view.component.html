@@ -1,0 +1,165 @@
+<div class="branch-detail soft-panel">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb">
+    <div class="breadcrumb-nav">
+      <button class="breadcrumb-link" (click)="goBack()">Branches</button>
+      <span class="breadcrumb-separator">></span>
+      <span class="breadcrumb-current">{{ branchData.name || 'Branch' }}</span>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="add-till-btn" (click)="addTillAndTerminal('till')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"></path>
+        </svg>
+        Add Till
+      </button>
+      <button class="add-till-btn" (click)="addTillAndTerminal('terminal')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"></path>
+        </svg>
+        Add Terminal
+      </button>
+    </div>
+  </div>
+
+  <!-- Tills Section -->
+  <div class="section">
+    <h5 class="mb-4 nav-head-txt">Tills and Safe</h5>
+    <div class="machines-grid">
+      <div class="machine-card" *ngFor="let item of tillsAndSafe" [ngClass]="{'has-machine-id': item.machine_id}">
+        <div class="machine-header">
+          <h3 class="machine-name">{{ item.name }}</h3>
+          <div class="header-actions">
+            <!-- Remove Machine ID button (only if machine_id exists) -->
+            <div class="tooltip-container" *ngIf="item.machine_id && item.device_type === 'till'">
+              <button class="header-action-btn remove-btn" (click)="removeMachineId(item)" title="Remove Machine ID">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18"></path>
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+              </button>
+              <div class="tooltip">Remove Machine ID</div>
+            </div>
+            <!-- Edit button -->
+            <div class="tooltip-container" *ngIf="item.device_type === 'till'">
+              <button class="header-action-btn edit-btn" (click)="editItem(item)" title="Edit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <div class="tooltip">Edit</div>
+            </div>
+          </div>
+        </div>
+        <div class="machine-body">
+          <div class="machine-info">
+            <div class="info-row">
+              <span class="info-label">Total Cash:</span>
+              <span class="info-value">£{{ item.total_balance.toFixed(2) }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Status:</span>
+              <span class="info-value">{{ item.is_active === 1 ? 'Active' : 'Inactive' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Machine Id:</span>
+              <span class="info-value">{{item.machine_id || 'Not Assigned'}}</span>
+            </div>
+          </div>
+          <div class="machine-actions">
+            <button class="btn btn-primary" (click)="viewDenominations(item)">
+              Denominations
+            </button>
+            <button class="btn btn-outline" (click)="viewAuditLog(item)">
+              Audit Log
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-no-data *ngIf="!tillsAndSafe || tillsAndSafe.length === 0" [config]="noDataConfig"
+      (buttonClick)="addTillAndTerminal('till')">
+    </app-no-data>
+  </div>
+
+  <!-- Terminals Section -->
+  <div class="section">
+    <h5 class="mb-4 nav-head-txt">Terminals</h5>
+    <div class="machines-grid">
+      <div class="machine-card" *ngFor="let tablet of tablets" [ngClass]="{'has-machine-id': tablet.machine_id}">
+        <div class="machine-header">
+          <h3 class="machine-name">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <line x1="12" y1="18" x2="12.01" y2="18"></line>
+            </svg>
+            {{ tablet.name }}
+          </h3>
+          <div class="header-actions">
+            <!-- Remove Machine ID button (only if machine_id exists) -->
+            <div class="tooltip-container" *ngIf="tablet.machine_id">
+              <button class="header-action-btn remove-btn" (click)="removeMachineId(tablet)" title="Remove Machine ID">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18"></path>
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+              </button>
+              <div class="tooltip">Remove Machine ID</div>
+            </div>
+            <!-- Edit button -->
+            <div class="tooltip-container">
+              <button class="header-action-btn edit-btn" (click)="editItem(tablet)" title="Edit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <div class="tooltip">Edit</div>
+            </div>
+          </div>
+        </div>
+        <div class="machine-body">
+          <div class="machine-info">
+            <div class="info-row">
+              <span class="info-label">Status:</span>
+              <span class="info-value">{{ tablet.is_active === 1 ? 'Active' : 'Inactive' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Machine Id:</span>
+              <span class="info-value">{{tablet.machine_id || 'Not Assigned'}}</span>
+            </div>
+          </div>
+          <div class="machine-actions">
+            <button class="btn btn-outline" (click)="viewAuditLog(tablet)">
+              Audit Log
+            </button>
+            <button class="btn btn-danger" (click)="removeMachineId(tablet)">
+              Remove Machine ID
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-no-data *ngIf="!tablets || tablets.length === 0" [config]="noDataConfigTerminal"
+      (buttonClick)="addTillAndTerminal('terminal')">
+    </app-no-data>
+  </div>
+</div>
+
+<app-common-modal [showModal]="showTillModal" [title]="modalHeader" [buttons]="tillModalButton"
+  (onClose)="closeTillModal()" (onAction)="saveTillDetails($event)">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="tillName">{{modalTitle}}</label>
+      <input type="text" id="tillName" class="form-control" [(ngModel)]="tillAndTerminalName"
+        [placeholder]="modalInputPlaceholder">
+    </div>
+  </div>
+</app-common-modal>

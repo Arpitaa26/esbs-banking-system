@@ -1,0 +1,388 @@
+<div class="form-builder-container soft-panel">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/customer-menu" routerLinkActive="router-link-active">Customer Menu</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Customer Menu Edit</li>
+    </ol>
+  </nav>
+  <!-- Form Configuration Section -->
+  <div class="form-config-section">
+    <h2 class="section-title">{{formTitle}}</h2>
+
+    <div class="config-row">
+      <div class="config-group w-50">
+        <label class="config-label">Title *</label>
+        <input type="text" class="config-input" [(ngModel)]="formConfig.title" placeholder="Enter title">
+      </div>
+
+      <div class="config-group w-50">
+        <label class="config-label">Notification Email Address </label>
+        <input type="email" class="config-input" [(ngModel)]="formConfig.notification_email" placeholder="Enter email">
+      </div>
+    </div>
+
+    <div class="config-group full-width">
+      <label class="config-label">Description</label>
+      <textarea class="config-textarea" [(ngModel)]="formConfig.description" placeholder="Enter description"
+        rows="3"></textarea>
+    </div>
+
+    <div class="d-flex flex-column gap-3 mt-3">
+
+      <div class="toggle-switch">
+        <input type="checkbox" id="status-toggle" [(ngModel)]="formConfig.status" class="toggle-input">
+        <label for="status-toggle" class="toggle-label">
+          <span class="label-text">Status for Customer Menu</span>
+        </label>
+      </div>
+
+      <div class="toggle-switch">
+        <input type="checkbox" id="scan-toggle" [(ngModel)]="formConfig.is_scan_document_allowed" class="toggle-input"
+          (change)="toggleScanDocuments($event)">
+        <label for="scan-toggle" class="toggle-label">
+          <span class="label-text">Scan Document (if attached as reference)</span>
+        </label>
+      </div>
+
+      <div class="toggle-switch">
+        <input type="checkbox" id="readonly-toggle" [(ngModel)]="formConfig.is_read_only" class="toggle-input">
+        <label for="readonly-toggle" class="toggle-label">
+          <span class="label-text">Read Only (No one can edit)</span>
+        </label>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Drag & Drop Section -->
+  <div class="drag-drop-section">
+    <div class="drag-drop-container">
+      <!-- Form Preview -->
+      <div class="form-preview">
+        <h3 class="preview-title">Drag & Drop From Fields</h3>
+        <p class="preview-subtitle">Form Preview</p>
+
+        <div class="preview-fields" cdkDropList #previewList="cdkDropList" [cdkDropListData]="formPreviewFields"
+          [cdkDropListConnectedTo]="[fieldList]" (cdkDropListDropped)="onFieldDrop($event)">
+
+          <div *ngFor="let field of formPreviewFields; let i = index" class="preview-field" cdkDrag>
+
+            <!-- Drag handle -->
+            <div class="drag-handle" cdkDragHandle>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="12" r="1" />
+                <circle cx="9" cy="5" r="1" />
+                <circle cx="9" cy="19" r="1" />
+                <circle cx="15" cy="12" r="1" />
+                <circle cx="15" cy="5" r="1" />
+                <circle cx="15" cy="19" r="1" />
+              </svg>
+            </div>
+
+            <div class="field-content">
+              <label class="field-label">
+                {{ field?.label }}
+                <span *ngIf="field.required" class="required">*</span>
+                <span class="field-size-badge">{{ getFieldSize(field) }}</span>
+              </label>
+              <input *ngIf="field.type !== 'textarea' && field.type !== 'dropdown'" [type]="field.type"
+                class="field-input" [placeholder]="field.placeholder" readonly>
+              <select *ngIf="field.type === 'dropdown'" class="field-input" readonly>
+                <option>{{ field.placeholder }}</option>
+                <option *ngFor="let option of field.options" [value]="option.value">
+                  {{ option.label }}
+                </option>
+              </select>
+              <textarea *ngIf="field.type === 'textarea'" class="field-textarea" [placeholder]="field.placeholder"
+                readonly rows="2"></textarea>
+            </div>
+
+            <!-- Field Actions -->
+            <div class="field-actions">
+              <!-- Edit button -->
+              <!-- <button class="edit-field-btn" (click)="editField(i)" title="Edit Field">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button> -->
+
+              <!-- Remove button -->
+              <button class="remove-field-btn" (click)="removeField(i)" title="Remove Field">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" (click)="onSubmit()">Submit</button>
+          <button class="btn btn-secondary" *ngIf="scanDocuments">Scan Documents</button>
+        </div>
+      </div>
+
+      <!-- Field List -->
+      <div class="field-list">
+        <div class="field-list-header">
+          <h3 class="field-list-title">Field List (Drag From here)</h3>
+          <button class="add-field-btn" (click)="addNewFieldType()">Add Field</button>
+        </div>
+
+        <div class="available-fields" cdkDropList #fieldList="cdkDropList" [cdkDropListData]="availableFields"
+          [cdkDropListConnectedTo]="[previewList]" cdkDropListSortingDisabled>
+
+          <div *ngFor="let field of availableFields; let i = index" class="available-field"
+            [style.background-color]="field.color" cdkDrag>
+            <div>
+              <span class="field-icon">{{ field.icon }}</span>
+              <span class="field-name ms-1">{{ field.label }} ({{ field.label }})</span>
+            </div>
+
+            <div class="field-actions">
+              <!-- Edit button -->
+              <button class="edit-field-btn" (click)="editField(i)" title="Edit Field">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+
+              <!-- Remove button -->
+              <button class="remove-field-btn" (click)="deleteField(i)" title="Remove Field">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Field Modal -->
+  <div class="modal-overlay" *ngIf="showAddFieldModal" (click)="closeAddFieldModal()">
+    <div class="add-field-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">Add form field</h3>
+        <button class="modal-close" (click)="closeAddFieldModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Label *</label>
+            <input type="text" class="form-input" [(ngModel)]="newField.label" placeholder="Enter your value">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Type *</label>
+            <select class="form-select" [(ngModel)]="newField.type">
+              <option value="">Select type</option>
+              <option *ngFor="let type of fieldTypes" [value]="type.value">
+                {{ type.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Placeholder *</label>
+            <input type="text" class="form-input" [(ngModel)]="newField.placeholder" placeholder="Enter your value">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Size *</label>
+            <select class="form-select" [(ngModel)]="newField.size">
+              <option value="">Select size</option>
+              <option *ngFor="let size of sizeOptions" [value]="size.value">
+                {{ size.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Input Key *</label>
+            <input type="text" class="form-input" [(ngModel)]="newField.input_key" placeholder="Enter your value">
+          </div>
+        </div>
+
+        <!-- Options for dropdown/select fields -->
+        <div class="form-group full-width" *ngIf="newField.type === 'dropdown'">
+          <label class="form-label">Options</label>
+          <div class="options-container">
+            <div class="option-row" *ngFor="let option of newField.options; let i = index">
+              <input type="text" class="form-input" [(ngModel)]="option.label" placeholder="Option label">
+              <input type="text" class="form-input" [(ngModel)]="option.value" placeholder="Option value">
+              <button class="remove-option-btn" (click)="removeOption(i)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <button class="add-option-btn" (click)="addOptionToField()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add Option
+            </button>
+          </div>
+        </div>
+
+        <!-- Updated checkbox section -->
+        <div class="checkbox-section">
+          <div class="checkbox-item">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="newField.mandatory" class="checkbox-input">
+              <span class="checkbox-text">Are you want field mandatory?</span>
+            </label>
+          </div>
+
+          <div class="checkbox-item">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="newField.newLine" class="checkbox-input">
+              <span class="checkbox-text">Are you want make this input in next line?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="add-field-submit-btn" (click)="saveNewField()">
+          Add Field
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Field Modal -->
+  <div class="modal-overlay" *ngIf="showEditFieldModal" (click)="closeEditFieldModal()">
+    <div class="add-field-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit form field</h3>
+        <button class="modal-close" (click)="closeEditFieldModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Label *</label>
+            <input type="text" class="form-input" [(ngModel)]="newField.label" placeholder="Enter your value">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Type *</label>
+            <select class="form-select" [(ngModel)]="newField.type">
+              <option value="">Select type</option>
+              <option *ngFor="let type of fieldTypes" [value]="type.value">
+                {{ type.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Placeholder *</label>
+            <input type="text" class="form-input" [(ngModel)]="newField.placeholder" placeholder="Enter your value">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Size *</label>
+            <select class="form-select" [(ngModel)]="newField.size">
+              <option value="" disabled>Select size</option>
+              <option *ngFor="let size of sizeOptions" [value]="size.value">
+                {{ size.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Input Key *</label>
+            <input type="text" class="form-input" [(ngModel)]="newField.input_key" placeholder="Enter your value">
+          </div>
+
+
+        </div>
+
+        <!-- Options for dropdown/select fields -->
+        <div class="form-group full-width" *ngIf="newField.type === 'dropdown'">
+          <label class="form-label">Options</label>
+          <div class="options-container">
+            <div class="option-row" *ngFor="let option of newField.options; let i = index">
+              <input type="text" class="form-input" [(ngModel)]="option.label" placeholder="Option label">
+              <input type="text" class="form-input" [(ngModel)]="option.value" placeholder="Option value">
+              <button class="remove-option-btn" (click)="removeOption(i)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <button class="add-option-btn" (click)="addOptionToField()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add Option
+            </button>
+          </div>
+        </div>
+
+        <!-- Updated checkbox section -->
+        <div class="checkbox-section">
+          <div class="checkbox-item">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="newField.mandatory" class="checkbox-input">
+              <span class="checkbox-text">Are you want field mandatory?</span>
+            </label>
+          </div>
+
+          <div class="checkbox-item">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="newField.newLine" class="checkbox-input">
+              <span class="checkbox-text">Are you want make this input in next line?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="add-field-submit-btn" (click)="saveEditedField()">
+          Update Field
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-common-modal [showModal]="showDeleteModal" [title]="'Alert'" [buttons]="deleteModalButton"
+  (onClose)="closeTillModal()" (onAction)="deleteMenu($event)">
+  <div class="modal-body text-center">
+    <div>
+      <i class="bi bi-exclamation-triangle-fill text-danger fs-3 d-block mb-2"></i>
+      <p class="mb-0 fs-5 fw-semibold">
+        Are you sure you want to delete the {{editingField?.label}} field?
+      </p>
+      <small class="text-muted">This action cannot be undone.</small>
+    </div>
+  </div>
+</app-common-modal>

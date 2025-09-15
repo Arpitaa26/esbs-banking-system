@@ -1,0 +1,121 @@
+<div class="table-wrapper">
+  <div class="table-container" *ngIf="data && data.length > 0">
+    <table class="dynamic-table">
+      <thead>
+        <tr class="table-header">
+          <th *ngIf="withCheckbox" class="checkbox-column">
+            <input type="checkbox" [checked]="isAllSelected" [indeterminate]="isIndeterminate" class="table-checkbox"
+              (change)="toggleSelectAll()" (click)="$event.stopPropagation()" />
+          </th>
+          <th *ngFor="let column of columns; trackBy: trackByColumn" [style.width]="getColumnWidth(column)"
+            [style.min-width]="column.width || '120px'" class="table-header-cell">
+            {{ column.label }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of paginatedData(); let i = index; trackBy: trackByRow" class="table-row"
+          [class.selected]="isRowSelected(row)" [class.even]="i % 2 === 0" [class.odd]="i % 2 === 1"
+          (click)="onRowClick(row)">
+          <td *ngIf="withCheckbox" class="checkbox-column">
+            <input type="checkbox" [checked]="row?.selected || false" (change)="toggleSelection(row)"
+              (click)="$event.stopPropagation()" class="table-checkbox" />
+          </td>
+          <td *ngFor="let column of columns; trackBy: trackByColumn" [style.width]="getColumnWidth(column)"
+            [style.min-width]="column.width || '120px'" class="table-cell" [attr.data-label]="column.label">
+            <ng-container [ngSwitch]="column.type">
+              <span *ngSwitchCase="'status'">
+                <span class="status-badge" [ngClass]="getStatusClass(row[column.key])">
+                  {{ row[column.key] || '-' }}
+                </span>
+              </span>
+              <span *ngSwitchCase="'action'">
+                <button *ngFor="let action of row[column.key]; trackBy: trackByAction"
+                  [ngStyle]="{ 'background-color': action?.color }" [ngClass]="action?.class"
+                  (click)="handleAction(action, row); $event.stopPropagation()" class="action-btn"
+                  [title]="action?.tooltip || action?.label">
+                  <span *ngIf="action?.icon" [innerHTML]="action.icon"></span>
+                  {{ action?.label }}
+                </button>
+              </span>
+              <span *ngSwitchCase="'action-icon'">
+                <span (click)="handleAction(action, row); $event.stopPropagation()"
+                  *ngFor="let action of row[column.key]; trackBy: trackByAction" class="action-icon" aria-hidden="true"
+                  [innerHTML]="action.icon"></span>
+              </span>
+              <span *ngSwitchDefault class="cell-content" [title]="row[column.key] || '-'">
+                <ng-container *ngIf="isString(row[column.key]); else nonString">
+                  {{ row[column.key] ? truncateText(row[column.key], column.width ? 30 : 50) : '-' }}
+                </ng-container>
+                <ng-template #nonString>
+                  {{ row[column.key] ? row[column.key] : '-' }}
+                </ng-template>
+              </span>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Enhanced Pagination with Ellipsis -->
+  <div class="pagination-section" *ngIf="enablePagination && totalCount > 0">
+    <div class="pagination-info">
+      <span class="showing-text">
+        Showing {{ pageStart + 1 }} - {{ pageEnd }} of {{ totalCount }} items
+      </span>
+      <span class="page-info" *ngIf="totalPages > 1">
+        (Page {{ currentPage }} of {{ totalPages }})
+      </span>
+    </div>
+
+    <div class="pagination-controls">
+      <!-- Previous Button -->
+      <button class="page-button prev-btn" (click)="goToPrevious()" [disabled]="currentPage === 1"
+        title="Previous page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+        Previous
+      </button>
+
+      <!-- Page Numbers with Ellipsis -->
+      <div class="page-numbers" *ngIf="totalPages > 1">
+        <ng-container *ngFor="let item of getPaginationItems(); trackBy: trackByPaginationItem">
+          <button *ngIf="item.type === 'page'" class="page-number-btn" [class.active]="item.active"
+            (click)="onPaginationItemClick(item)" [title]="'Go to page ' + item.value">
+            {{ item.value }}
+          </button>
+          <span *ngIf="item.type === 'ellipsis'" class="page-ellipsis" title="More pages">
+            {{ item.value }}
+          </span>
+        </ng-container>
+      </div>
+
+      <!-- Next Button -->
+      <button class="page-button next-btn" (click)="goToNext()" [disabled]="currentPage >= totalPages"
+        title="Next page">
+        Next
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9,18 15,12 9,6"></polyline>
+        </svg>
+      </button>
+
+      <!-- Divider -->
+      <div class="pagination-divider"></div>
+
+      <!-- Page Size Selector -->
+      <div class="page-size-container">
+        <label for="pageSize" class="page-size-label">Show:</label>
+        <select id="pageSize" class="page-size-select" [(ngModel)]="rowsPerPage" (change)="onPageSizeChange()"
+          title="Items per page">
+          <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Data Component -->
+  <app-no-data *ngIf="!data || data.length === 0" [config]="noDataConfig">
+  </app-no-data>
+</div>

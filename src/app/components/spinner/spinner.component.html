@@ -1,0 +1,19 @@
+<div
+  *ngIf="spinnerState.isVisible"
+  class="spinner-overlay"
+  [@fadeInOut]
+  (click)="onOverlayClick($event)"
+>
+  <div class="spinner-container" [@scaleIn]>
+    <div class="spinner-bars">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <div class="spinner-text ms-2">
+      {{ spinnerState.message }}
+    </div>
+  </div>
+</div>

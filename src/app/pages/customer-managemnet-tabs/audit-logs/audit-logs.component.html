@@ -1,0 +1,15 @@
+
+
+
+<div *ngIf="!isChildRouteActive()" class="mb-4 ms-2 text-md-start text-center mt-4">
+  <h2 class="text">{{ data.customer_data.fullname }}</h2>
+  <p class="text"><b>Phoebus Reference Number: {{ data.customer_data.memberid }}</b></p>
+
+  
+  <div style="width: 100%; margin-right: 50px;">
+    <table [options]="auditLogOptions"></table>
+  </div>
+</div>
+
+
+<router-outlet></router-outlet>

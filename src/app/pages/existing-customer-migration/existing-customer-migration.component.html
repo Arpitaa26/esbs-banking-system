@@ -1,0 +1,7 @@
+<div class="w-100 h-100 pb-4">
+    <segment [segbuttons]="segbuttonConfig" (segbuttonClicked)="seghandleClick($event)" class="mt-2"></segment>
+    <table [options]="MVdata" *ngIf="currentTab==='status'"></table>
+    <div class="col-12 px-5 pt-2 justify-self-center" *ngIf="currentTab !=='status'">
+        <div id="editor-container" style="height: 75px;"></div>
+    </div>
+</div>

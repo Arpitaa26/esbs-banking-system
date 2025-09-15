@@ -1,0 +1,29 @@
+<div class="toastr-container" [@listAnimation]="toasts.length">
+  <div
+    *ngFor="let toast of toasts; trackBy: trackByFn"
+    class="toastr"
+    [ngClass]="toast.type"
+    [@slideIn]
+    (click)="onToastClick(toast)"
+  >
+    <div class="toastr-icon">
+      {{ getIcon(toast.type) }}
+    </div>
+    <div class="toastr-content">
+      {{ toast.message }}
+    </div>
+    <button
+      *ngIf="toast.closable"
+      class="toastr-close"
+      (click)="closeToast($event, toast.id)"
+      aria-label="Close notification"
+    >
+      ×
+    </button>
+    <div
+      *ngIf="toast.duration && toast.duration > 0"
+      class="toastr-progress"
+      [style.animation-duration.ms]="toast.duration"
+    ></div>
+  </div>
+</div>

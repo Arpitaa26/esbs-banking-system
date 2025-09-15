@@ -1,0 +1,59 @@
+<div class="d-flex justify-content-between align-items-center mx-3 mt-2 p-1 save-bar">
+    <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-4 text-dark back-arrow"></i>
+    <!-- <button class="me-4 w-10 back-btn place-self-end save-btn" (click)="save()">Save Changes</button> -->
+</div>
+<div class="row ms-3 ps-1 pb-5">
+    <div class="col-4 p-3 mt-1 left-card">
+        <div class="row g-3 d-flex ml-3">
+            <div class="col-md-12">
+                <label class="form-label">Status</label>
+                <input type="text" readonly [(ngModel)]="user.state_status" class="form-control py-2">
+            </div>
+            <div class="col-md-12">
+                <label class="form-label">Device Type</label>
+                <input type="text" readonly [(ngModel)]="user.devicetype" class="form-control py-2">
+            </div>
+
+            <div class="col-md-12">
+                <label class="form-label">Modified Date</label>
+                <input type="text" readonly [(ngModel)]="user.create_date" class="form-control py-2">
+            </div>
+            <div class="col-md-12" *ngIf="user?.mobileno|| user?.newmobileno">
+                <label class="form-label">Mobile Number</label>
+                <input type="text" readonly [(ngModel)]="user.mobileno" class="form-control py-2"
+                    *ngIf="user?.mobileno">
+                <input type="text" readonly [(ngModel)]="user.newmobileno" class="form-control py-2"
+                    *ngIf="user?.newmobileno">
+            </div>
+            <div class="col-md-12" *ngIf="user?.email">
+                <label class="form-label">Email ID</label>
+                <input type="email" [(ngModel)]="user.emailid" class="form-control py-2">
+            </div>
+            <div class="col-md-12" *ngIf="user?.uuid|| user?.shortuuid">
+                <label class="form-label">UUID</label>
+                <input type="text" readonly [(ngModel)]="user.uuid" class="form-control py-2" *ngIf="user?.uuid">
+                <input type="text" readonly [(ngModel)]="user.shortuuid" class="form-control py-2"
+                    *ngIf="user?.shortuuid">
+            </div>
+        </div>
+        <div class="d-flex align-items-end mx-3 mt-2 p-1 text-right text-end">
+            <button class="w-10 back-btn save-btn" (click)="updateStatus()">Update Status</button>
+        </div>
+        <div *ngIf="user.state_status ==='Existing Customer Documents Verification Continue From Branch'"
+            class="d-flex align-items-end mx-3 mt-2 p-1 text-right text-end">
+            <button class="w-10 back-btn save-btn" (click)="approveExistingAppliction(user.state_status)">Approve
+                Documents</button>
+        </div>
+        <div *ngIf="user?.generated_letter !== null" class="d-flex align-items-end mx-3 mt-2 p-1 text-right text-end">
+            <button class="w-10 back-btn save-btn" (click)="DownloadPdf(user)">Download PDF</button>
+        </div>
+        <div *ngIf="statusMap[user.state_status] !== undefined"
+            class="d-flex align-items-end mx-3 mt-2 p-1 text-right text-end">
+            <button class="w-10 back-btn save-btn" *ngIf="statusMap[user.state_status] !== undefined"
+                (click)="Unblock(user.state_status,'statusMap')">Unblock</button>
+        </div>
+    </div>
+    <div class="col-8">
+        <table [options]="existing_onbording_Options"></table>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="view-denomination soft-panel">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a (click)="goBack()">Branch / Safe and Tills</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        View Denomination
+      </li>
+    </ol>
+  </nav>
+  <div class="controls-section">
+    <h5 class="mb-3 nav-head-txt">Remaining Balance: £{{ remaining_balance.toFixed(2) }}</h5>
+    <div class="download-buttons">
+      <button class="add-menu-btn" (click)="addDenomination()" *ngIf="safe_id">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"></path>
+        </svg>
+        Add Denomination
+      </button>
+    </div>
+  </div>
+
+  <app-dynamic-table [data]="denominations" [columns]="tableColumns" [withCheckbox]="false" [rowsPerPage]="itemsPerPage"
+    [enablePagination]="true" (pageChange)="goToPage($event)">
+  </app-dynamic-table>
+
+  <app-common-modal [width]="'1200px'" [height]="'400px'" [showModal]="showDenominationModal"
+    [title]="'Cash Denominations (Total : £' + totalAmount.toFixed(2) + ')'" [buttons]="denominationButtons"
+    (onClose)="closeDenominationModal()" (onAction)="saveDenominations($event)">
+
+    <div class="denomination-modal-body">
+      <div class="denomination-container">
+
+        <div class="denomination-section notes-section">
+          <h3 class="section-title">Notes</h3>
+          <div class="denomination-grid">
+            <div class="denomination-row" *ngFor="let row of notesRows">
+              <div class="denomination-item" *ngFor="let note of row">
+                <label class="denomination-label">£{{ note }}</label>
+                <input type="number" class="denomination-input" [(ngModel)]="denomination[note]"
+                  (ngModelChange)="calculateTotal()" min="0" placeholder="0">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="denomination-section coins-section">
+          <h3 class="section-title">Coins</h3>
+          <div class="denomination-grid">
+            <div class="denomination-row" *ngFor="let row of coinsRows">
+              <div class="denomination-item" *ngFor="let coin of row">
+                <label class="denomination-label">{{ coin }}</label>
+                <input type="number" class="denomination-input" [(ngModel)]="denomination[coin]"
+                  (ngModelChange)="calculateTotal()" min="0" placeholder="0">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </app-common-modal>
+</div>

@@ -1,0 +1,51 @@
+<segment [segbuttons]="segbuttonConfig"  [segmentTab]="currentTab" (segbuttonClicked)="seghandleClick($event)" class="mt-2"></segment>
+
+<div [hidden]="currentTab !== 'function'" class="function-tab">
+  <div class="card shadow-sm rounded-3 p-3">
+    <div class="card-body">
+      <div class="function">
+        <div class="container  ">
+          <h5 class="fw-bold mb-4">Functions</h5>
+          <button (click)="updateSettings()" *ngIf="showSaveButton" class="save-changes">Save Changes</button>
+
+          <div class="mb-5">
+            <h6 class="fw-semibold mb-3">Types of Accounts:</h6>
+            <div class="row g-3">
+              <ng-container *ngFor="let tag of repeatedTags">
+                <div class="col-12 col-md-4">
+                  <div
+                    [ngClass]=" 'menu-card d-flex align-items-center justify-content-start gap-3 rounded shadow-sm ' + (tag.class || '') + (selectedMenus[tag.key] === 1 ? ' menu-card-selected' : '') ">
+                    <input type="checkbox" class="form-check-input menu-checkbox" name="type1"
+                      (change)="onCheckboxChange($event, tag.key)" [checked]="selectedMenus[tag.key] === 1" />
+                    <label class="m-0 fw-medium">{{ tag.label }}</label>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+
+          <div>
+            <h6 class="fw-semibold mb-3">Features :</h6>
+            <div class="row g-3">
+              <ng-container *ngFor="let tag of menuOptions">
+                <div class="col-12 col-md-4">
+                  <div
+                    [ngClass]=" 'menu-card d-flex align-items-center justify-content-start gap-3 rounded shadow-sm ' + (tag.class || '') + (selectedMenus[tag.key] === 1 ? ' menu-card-selected' : '') ">
+                    <input type="checkbox" class="form-check-input menu-checkbox" name="type2"
+                      (change)="onCheckboxChange($event, tag.key)" [checked]="selectedMenus[tag.key] === 1" />
+                    <label class="m-0 fw-medium">{{ tag.label }}</label>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="header mt-3" [hidden]="currentTab !== 'app_version'">
+  <table [options]="deviceData" (pageChange)="onPageChange($event)" (sortChange)="onSortChange($event)"
+    (searchFilter)="onSearchFilter($event)">
+  </table>
+</div>

@@ -1,0 +1,239 @@
+<div class="card mb-3" >
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0 cursor-pointer" (click)="onToggleAccordion()">
+            <span>{{ accordionState.show ? '-' : '+' }}</span>
+            {{config.label}}
+          </h5>
+        </div>
+
+        <div *ngIf="openAccordian" class="mt-3">
+          <div class="card mb-3" *ngIf="config.source_of_fund">
+            <div class="card-body main-body">
+              <h5 class="card-subtitle mb-2">{{config.dropdown_label ? config.dropdown_label : 'Source of funds'}}</h5>
+
+              <div class="row mb-2">
+                <div class="col-md-2">
+                  <label class="form-label">Status</label>
+                </div>
+                <div class="col-md-3" *ngIf="config.source_of_fund.enabled">
+                  <label class="form-label">More Than (Amount)</label>
+                </div>
+                <div class="col-md-5" *ngIf="config.source_of_fund.enabled">
+                  <label class="form-label">{{config.dropdown_label ? config.dropdown_label : 'Source of funds'}}</label>
+                </div>
+                <div class="col-md-2" *ngIf="config.source_of_fund.enabled">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch"
+                      [(ngModel)]="config.source_of_fund.enabled" (change)="onConfigChange()">
+                    <label class="form-check-label">Enabled</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3" *ngIf="config.source_of_fund.enabled">
+                  <input type="number" class="form-control" [(ngModel)]="config.source_of_fund.more_than"
+                    (change)="onConfigChange()">
+                </div>
+
+                <div class="col-md-5" *ngIf="config.source_of_fund.enabled">
+                  <div class="d-flex flex-wrap gap-2 mb-2 list-box">
+                    <span class="tag  d-flex align-items-center list-box"
+                      *ngFor="let source of config.source_of_fund.dropdownlist_for_source_of_funds; let i = index">
+                      <i class="bi bi-wallet2 me-2"></i>
+                      {{ source.name }}
+                      <i class="bi bi-x-circle ms-2 cursor-pointer"
+                        (click)="onRemoveSource(config.source_of_fund.dropdownlist_for_source_of_funds, i)"></i>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="col-md-2" *ngIf="config.source_of_fund.enabled">
+                  <button class="btn btn-primary btn-sm btn-setting"
+                    (click)="onAddSource(config.source_of_fund.dropdownlist_for_source_of_funds, 'config.source_of_fund.dropdownlist_for_source_of_funds', config.dropdown_label ?  'purpose': 'sources')">
+                    
+                    {{config.dropdown_label ? 'Add Purpose' : 'Add Source'}}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-3">
+            <div class="card-body main-body">
+              <h5 class="card-subtitle mb-2">Customer signature threshold</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <input type="number" class="form-control"
+                    [(ngModel)]="config.customer_signature_thresholdcustomer" (change)="onConfigChange()">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-3">
+            <div class="card-body main-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="card-subtitle mb-0">ID verification thresholds</h5>
+                <button class="btn btn-primary btn-sm btn-setting" (click)="onAddThreshold(config.id_threshold)">
+                  <i class="bi bi-plus"></i> Add threshold
+                </button>
+              </div>
+
+              <div class="card mb-3" *ngFor="let threshold of config.id_threshold; let i = index">
+                <div class="card-body inner-body">
+                  <h5 class="card-subtitle mb-3">Threshold {{ i + 1 }}</h5>
+
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                      <label class="form-label">More Than</label>
+                      <input type="number" class="form-control" [(ngModel)]="threshold.more_than"
+                        (change)="onConfigChange()">
+                    </div>
+
+                    <div class="col-md-3">
+                      <label class="form-label">Documents Required</label>
+                      <select class="form-select" [(ngModel)]="threshold.documents"
+                        (change)="onChangeThresholdDoc(threshold.documnentCount, threshold.documents)">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                      </select>
+                    </div>
+
+                    <div class="col-md-6 text-end">
+                      <button class="btn btn-danger btn-sm"
+                        (click)="onRemoveThreshold(config.id_threshold, i)">
+                        <i class="bi bi-trash"></i> Delete
+                      </button>
+                    </div>
+                  </div>
+
+                  <div *ngFor="let item of threshold.documnentCount; let k = index" class="mb-3">
+                    <div class="row mb-2">
+                      <div class="col-md-6">
+                        <label class="form-label">{{ item.name }}</label>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label"
+                          *ngIf="k == 1 && (threshold.optVerification[0].isSms || threshold.optVerification[1].isEmail || threshold.optVerification[2].isAppNotify)">
+                          Second document not required with
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="row align-items-center">
+                      <div class="col-md-4">
+                        <div class="d-flex flex-wrap gap-2 mb-2 list-box">
+                          <span class="  d-flex align-items-center tag"
+                            *ngFor="let doc of item.list; let j = index">
+                            <i class="bi bi-file-earmark-text me-2"></i>
+                            {{ doc.name }}
+                            <i class="bi bi-x-circle ms-2 cursor-pointer" (click)="onRemoveDocument(item.list, j)"></i>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="col-md-2">
+                        <button class="btn btn-primary btn-sm btn-setting"
+                          (click)="onAddDocument(item.list, 'cash_deposit.id_threshold', 'document', i, k)">
+                          Add Document
+                        </button>
+                      </div>
+
+                      <div class="col-md-2" *ngIf="k == 0">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox"
+                            [(ngModel)]="threshold.optVerification[0].isSms" (change)="onConfigChange()">
+                          <label class="form-check-label">SMS</label>
+                        </div>
+                      </div>
+
+                      <div class="col-md-2" *ngIf="k == 0">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox"
+                            [(ngModel)]="threshold.optVerification[1].isEmail" (change)="onConfigChange()">
+                          <label class="form-check-label">Email</label>
+                        </div>
+                      </div>
+
+                      <div class="col-md-2" *ngIf="k == 0">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox"
+                            [(ngModel)]="threshold.optVerification[2].isAppNotify" (change)="onConfigChange()">
+                          <label class="form-check-label">App notification</label>
+                        </div>
+                      </div>
+
+                      
+                        <div class="col-md-2"  *ngIf="threshold.optVerification[0].isSms && k == 1">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                              [(ngModel)]="threshold.is_sms_equivalent_to_all" (change)="onConfigChange()">
+                            <label class="form-check-label">SMS</label>
+                          </div>
+                        </div>
+
+                        <div class="col-md-2" *ngIf="threshold.optVerification[1].isEmail  && k == 1">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                              [(ngModel)]="threshold.is_email_equivalent_to_all" (change)="onConfigChange()">
+                            <label class="form-check-label">Email</label>
+                          </div>
+                        </div>
+
+                        <div class="col-md-2" *ngIf="threshold.optVerification[2].isAppNotify  && k == 1">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                              [(ngModel)]="threshold.is_app_notification_equivalent_to_all" (change)="onConfigChange()">
+                            <label class="form-check-label">App notification</label>
+                          </div>
+                        </div>
+                      
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="showDropdown" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h5 class="modal-title">{{checkboxToggleTitle}}</h5>
+      <button type="button" class="close" (click)=toggleModal(false) aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="list-group">
+        <div *ngFor="let doc of optionsList" class="list-group-item list-group-item-action">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="doc.selected" id="check-{{doc.name}}">
+            <label class="form-check-label w-100" for="check-{{doc.name}}">
+              {{ doc.name }}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary w-100" (click)="saveList()">Save</button>
+    </div>
+  </div>
+</div>

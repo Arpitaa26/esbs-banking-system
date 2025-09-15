@@ -1,0 +1,142 @@
+<div class="audit-dashboard soft-panel">
+  <!-- Navigation Tabs -->
+  <div class="nav-tabs" *ngIf="userId">
+    <button *ngFor="let tab of tabs" [class]="'tab-button ' + (tab.active ? 'active' : '')"
+      (click)="selectTab(tab.value)">
+      {{ tab.name }}
+    </button>
+  </div>
+
+  <!-- Create Staff Tab Content -->
+  <div *ngIf="activeTab === 'create'" class="tab-content">
+    <div class="form-container">
+      <form [formGroup]="staffFormData" (ngSubmit)="onSubmitStaff()" class="staff-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input type="text" id="firstName" class="form-input" formControlName="first_name"
+              placeholder="Enter first name">
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input type="text" id="lastName" class="form-input" formControlName="last_name"
+              placeholder="Enter last name">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" class="form-input" formControlName="email" placeholder="Enter email">
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone *</label>
+            <input type="tel" id="phone" class="form-input" formControlName="phone" placeholder="Enter phone number">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dateOfBirth">Date of Birth *</label>
+            <input type="date" id="dateOfBirth" class="form-input" formControlName="date_of_birth"
+              placeholder="Select date of birth">
+          </div>
+          <div class="form-group" *ngIf="genderList?.length">
+            <label for="gender">Gender *</label>
+            <select id="gender" class="form-select" formControlName="gender">
+              <option value="">Select Gender</option>
+              <option [value]="item.name" *ngFor="let item of genderList">{{item.name}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="role">Role *</label>
+            <select id="role" class="form-select" (change)="onMultiRoleChange($event)">
+              <option value="">Select Role to add</option>
+              <option *ngFor="let role of roleList" [value]="role.id">{{ role.name }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="branch">Select Branch *</label>
+            <!-- <input type="number" id="branchId" class="form-input" formControlName="branch_id"
+              placeholder="Enter branch ID"> -->
+              <select name="branch" id="branch" formControlName="branch_id" class="form-select">
+                <option value="">Select Branch</option>
+                <option *ngFor="let item of branches" [value]="item.branch_id">{{item.name}}</option>
+              </select>
+          </div>
+        </div>
+
+        <div class="form-row" *ngIf="!userId">
+          <div class="form-group">
+            <label for="password">Password *</label>
+            <input type="password" id="password" class="form-input" formControlName="password"
+              placeholder="Enter password">
+          </div>
+          <div class="form-group">
+            <label for="confirm-password">Confirm Password *</label>
+            <input type="password" id="confirm-password" class="form-input" formControlName="confirm_password"
+              placeholder="Re-enter password">
+          </div>
+        </div>
+        <div class="chip-wrapper" *ngIf="selectedRoles.length">
+          <span class="chip" *ngFor="let role of selectedRoles">
+            {{ role.name }}
+            <i class="bi bi-x-circle ms-2 cursor-pointer" (click)="removeRole(role.id)"></i>
+          </span>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="cancel-btn" (click)="resetForm()">Reset</button>
+          <button type="submit" class="save-btn">
+            {{staff_button}}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Audit Log Tab Content -->
+  <div *ngIf="activeTab === 'audit'" class="tab-content">
+    <div class="controls-section">
+      <div class="search-section">
+        <div class="search-container">
+          <div class="search-box">
+            <img src="https://cdn-icons-png.flaticon.com/512/622/622669.png" class="search-icon-left"
+              alt="search-icon" />
+            <input type="text" class="search-input" placeholder="Search Audit Log" [(ngModel)]="searchTerm"
+              (keyup.enter)="onSearch()" />
+            <div class="search-svg" (click)="onSearch()">
+              <svg width="60" height="52" viewBox="0 0 60 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 -4H60V56H32C14.3269 56 0 41.6731 0 24V-4Z" fill="url(#paint0_linear_103_946)" />
+                <path
+                  d="M40.6191 33.3097L34.439 26.8264L31.2412 30.1787L37.4258 36.662C37.9333 37.194 38.7687 37.194 39.2762 36.662L40.6191 35.2542C41.1267 34.7175 41.1267 33.8371 40.6191 33.3097Z"
+                  fill="#FEFDFE" />
+                <path
+                  d="M31.3809 28.7333L33.0562 26.9772L31.1474 24.9761C32.9529 22.2501 32.7014 18.474 30.3839 16.0446C27.7834 13.3185 23.557 13.3185 20.952 16.0446C18.3471 18.7706 18.3516 23.2011 20.952 25.9319C23.2696 28.3614 26.8716 28.625 29.4721 26.7323L31.3809 28.7333ZM22.2456 24.5571C20.3592 22.5796 20.3592 19.3733 22.2456 17.4005C24.1319 15.4231 27.1905 15.4231 29.0724 17.4005C30.9588 19.378 30.9588 22.5843 29.0724 24.5571C27.1905 26.5346 24.1319 26.5346 22.2456 24.5571Z"
+                  fill="#FEFDFE" />
+                <defs>
+                  <linearGradient id="paint0_linear_103_946" x1="5.5" y1="-4" x2="60" y2="47"
+                    gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#041643" />
+                    <stop offset="1" stop-color="#3E5ADF" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="download-buttons">
+        <button class="download-btn" (click)="downloadJSON()">Download JSON</button>
+        <button class="download-btn" (click)="downloadCSV()">Download CSV</button>
+      </div>
+    </div>
+
+    <app-dynamic-table [data]="auditData" [columns]="tableColumns" [withCheckbox]="false" [rowsPerPage]="itemsPerPage"
+      [enablePagination]="true" (pageChange)="goToPage($event)">
+    </app-dynamic-table>
+  </div>
+</div>

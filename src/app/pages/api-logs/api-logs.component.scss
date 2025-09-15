@@ -1,0 +1,118 @@
+
+::ng-deep table .table-cell{
+    word-wrap: break-word !important;
+}
+::ng-deep table .table-cell:nth-child(5) {
+    max-width: 100%;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+::ng-deep table .table-cell:nth-child(6) {
+    max-width: 100%;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+::ng-deep table .table-cell:nth-child(7) {
+    max-width: 100%;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.search-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.08);
+  align-items: flex-end;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 24px 32px 16px 32px;
+    border-radius: 8px;
+    border: 1px solid #CACED8;
+    background: var(--Primary-Tow, #FFF);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  flex: 1;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1E1E2F;
+}
+
+.styled-input {
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 1.5px solid #C5D3EC;
+  border-radius: 8px;
+  background-color: #F9FAFC;
+  color: #1E1E2F;
+  outline: none;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.styled-input:focus {
+  border-color: #1E88E5;
+  box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.2);
+}
+
+.search-btn {
+
+    border: none;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    border-radius: var(--Space-128px, 128px);
+    background: #C5CAFF;
+    color: #ffffff;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.2px;
+        background: linear-gradient(135deg, #041643, #3E5ADF);
+}
+.search-btn:active {
+      cursor: pointer;
+    transition: background 0.3s ease;
+    border-radius: var(--Space-128px, 128px);
+    background: #C5CAFF;
+    color: #ffffff;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.2px;
+        background: linear-gradient(135deg, #041643, #3E5ADF);
+}
+.search-btn:hover {
+    cursor: pointer;
+    transition: background 0.3s ease;
+    border-radius: var(--Space-128px, 128px);
+    background: #C5CAFF;
+    color: #ffffff;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.2px;
+    background: linear-gradient(135deg, #041643, #3E5ADF);
+}
+.container-wrapper {
+  padding: 0 5px;
+  max-width: 100%;
+  overflow-x: hidden;
+}

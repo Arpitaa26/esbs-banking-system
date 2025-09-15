@@ -1,0 +1,250 @@
+<div class="audit-detail-container soft-panel">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a (click)="goBack()">Api Logs</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        Api Details
+      </li>
+    </ol>
+  </nav>
+  <div class="loading-container" *ngIf="loading">
+    <div class="loading-spinner"></div>
+    <p>Loading audit log details...</p>
+  </div>
+
+  <div class="detail-content" *ngIf="!loading && logEntry">
+    <div class="info-card">
+      <div class="card-header" (click)="toggleSection('basicInfo')">
+        <div class="header-content">
+          <h2>Basic Information</h2>
+          <span class="card-subtitle">API call metadata and timing</span>
+        </div>
+        <button class="toggle-btn" [class.expanded]="expandedSections['basicInfo']">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6,9 12,15 18,9" />
+          </svg>
+        </button>
+      </div>
+      <div class="card-body" *ngIf="expandedSections['basicInfo']">
+        <div class="info-grid">
+          <div class="info-item">
+            <label>API Type</label>
+            <div class="info-value type-badge" [style.background-color]="getStatusColor(logEntry.type) + '20'"
+              [style.color]="getStatusColor(logEntry.type)">
+              {{ logEntry.type }}
+            </div>
+          </div>
+          <div class="info-item">
+            <label>Created Date</label>
+            <div class="info-value">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12,6 12,12 16,14" />
+              </svg>
+              {{ formatDate((logEntry.createdDate || logEntry.created_date)) }}
+            </div>
+          </div>
+          <div class="info-item full-width">
+            <label>Endpoint URL</label>
+            <div class="info-value url-value">
+              <span class="url-text">{{ logEntry.url }}</span>
+              <div class="url-actions">
+                <button class="action-btn" (click)="copyToClipboard(logEntry.url, 'URL')" title="Copy URL">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                  </svg>
+                </button>
+                <button class="action-btn" (click)="openInNewTab(logEntry.url)" title="Open URL">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15,3 21,3 21,9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Data Card -->
+    <div class="data-card">
+      <div class="card-header" (click)="toggleSection('errorData')">
+        <div class="header-content">
+          <h2>Error Data</h2>
+          <span class="card-subtitle">API error details or stack trace</span>
+        </div>
+        <div class="header-actions">
+          <button class="action-btn"
+            (click)="copyToClipboard((logEntry.error_message || logEntry.error), 'Error Data'); $event.stopPropagation()"
+            title="Copy Error Data">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+            </svg>
+          </button>
+          <button class="action-btn"
+            (click)="downloadJson((logEntry.error_message || logEntry.error), 'error-data'); $event.stopPropagation()"
+            title="Download JSON">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7,10 12,15 17,10" />
+              <line x1="12" x2="12" y1="15" y2="3" />
+            </svg>
+          </button>
+          <button class="toggle-btn" [class.expanded]="expandedSections['errorData']"
+            (click)="toggleSection('errorData'); $event.stopPropagation()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6,9 12,15 18,9" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="card-body" *ngIf="expandedSections['errorData']">
+        <div class="json-container">
+          <pre class="json-content"
+            *ngIf="(logEntry.error_message || logEntry.error); else noErrorData">{{ formatJson((logEntry.error_message || logEntry.error)) }}</pre>
+          <ng-template #noErrorData>
+            <div class="json-empty-message">No error data available</div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Request Data Card -->
+    <div class="data-card">
+      <div class="card-header" (click)="toggleSection('requestData')">
+        <div class="header-content">
+          <h2>Request Data</h2>
+          <span class="card-subtitle">Outgoing API request payload</span>
+        </div>
+        <div class="header-actions">
+          <button class="action-btn"
+            (click)="copyToClipboard((logEntry.requestBody || logEntry.requestbody), 'Request Data'); $event.stopPropagation()"
+            title="Copy Request Data">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+            </svg>
+          </button>
+          <button class="action-btn"
+            (click)="downloadJson((logEntry.requestBody || logEntry.requestbody), 'request-data'); $event.stopPropagation()"
+            title="Download JSON">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7,10 12,15 17,10" />
+              <line x1="12" x2="12" y1="15" y2="3" />
+            </svg>
+          </button>
+          <button class="toggle-btn" [class.expanded]="expandedSections['requestData']"
+            (click)="toggleSection('requestData'); $event.stopPropagation()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6,9 12,15 18,9" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="card-body" *ngIf="expandedSections['requestData']">
+        <div class="json-container">
+          <pre class="json-content"
+            *ngIf="(logEntry?.requestBody || logEntry?.requestbody); else noRequestBody">{{ formatJson((logEntry.requestBody || logEntry.requestbody)) }}</pre>
+          <ng-template #noRequestBody>
+            <div class="json-empty-message">No request body available</div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Response Data Card -->
+    <div class="data-card">
+      <div class="card-header" (click)="toggleSection('responseData')">
+        <div class="header-content">
+          <h2>Response Data</h2>
+          <span class="card-subtitle">Incoming API response payload</span>
+        </div>
+        <div class="header-actions">
+          <button class="action-btn"
+            (click)="copyToClipboard((logEntry.responseBody || logEntry.responsebody), 'Response Data'); $event.stopPropagation()"
+            title="Copy Response Data">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+            </svg>
+          </button>
+          <button class="action-btn"
+            (click)="downloadJson((logEntry.responseBody || logEntry.responsebody), 'response-data'); $event.stopPropagation()"
+            title="Download JSON">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7,10 12,15 17,10" />
+              <line x1="12" x2="12" y1="15" y2="3" />
+            </svg>
+          </button>
+          <button class="toggle-btn" [class.expanded]="expandedSections['responseData']"
+            (click)="toggleSection('responseData'); $event.stopPropagation()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6,9 12,15 18,9" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="card-body" *ngIf="expandedSections['responseData']">
+        <div class="json-container">
+          <pre class="json-content"
+            *ngIf="(logEntry?.responseBody || logEntry?.responsebody); else noResponseBody">{{ formatJson((logEntry.responseBody || logEntry.responsebody)) }}</pre>
+          <ng-template #noResponseBody>
+            <div class="json-empty-message">No response body available</div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header Data Card -->
+    <div class="data-card">
+      <div class="card-header" (click)="toggleSection('headerData')">
+        <div class="header-content">
+          <h2>Header Data</h2>
+          <span class="card-subtitle">HTTP headers and metadata</span>
+        </div>
+        <div class="header-actions">
+          <button class="action-btn"
+            (click)="copyToClipboard(logEntry.headers, 'Header Data'); $event.stopPropagation()"
+            title="Copy Header Data">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+            </svg>
+          </button>
+          <button class="action-btn" (click)="downloadJson(logEntry.headers, 'header-data'); $event.stopPropagation()"
+            title="Download JSON">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7,10 12,15 17,10" />
+              <line x1="12" x2="12" y1="15" y2="3" />
+            </svg>
+          </button>
+          <button class="toggle-btn" [class.expanded]="expandedSections['headerData']"
+            (click)="toggleSection('headerData'); $event.stopPropagation()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6,9 12,15 18,9" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="card-body" *ngIf="expandedSections['headerData']">
+        <div class="json-container">
+          <pre class="json-content"
+            *ngIf="logEntry?.headers; else noHeaderData">{{ formatJson(logEntry.headers) }}</pre>
+          <ng-template #noHeaderData>
+            <div class="json-empty-message">No header data available</div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

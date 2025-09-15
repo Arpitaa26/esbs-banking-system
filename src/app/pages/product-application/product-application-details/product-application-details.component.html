@@ -1,0 +1,68 @@
+<div class="d-flex justify-content-between align-items-center mx-3 mt-2 p-1 save-bar">
+    <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-4 text-dark back-arrow"></i>
+    <!-- <button class="me-4 w-10 back-btn place-self-end save-btn" (click)="save()">Save Changes</button> -->
+</div>
+<div class="row ms-3 ps-1 pb-5">
+    <div class="col-4 p-3 mt-1 left-card">
+        <div class="row g-3 d-flex ml-3">
+            <div class="col-md-12">
+                <label class="form-label">Status</label>
+                <input type="text" readonly [(ngModel)]="user.state_status" class="form-control py-2">
+            </div>
+            <div class="col-md-12">
+                <label class="form-label">Device Type</label>
+                <input type="text" readonly [(ngModel)]="user.devicetype" class="form-control py-2">
+            </div>
+
+            <div class="col-md-12">
+                <label class="form-label">Modified Date</label>
+                <input type="text" readonly [(ngModel)]="user.create_date" class="form-control py-2">
+            </div>
+            <div class="col-md-12">
+                <label class="form-label">Mobile Number</label>
+                <input type="number" [(ngModel)]="user.mobileno" class="form-control py-2">
+            </div>
+            <div class="col-md-12" *ngIf="user?.uuid|| user?.shortuuid">
+                <label class="form-label">UUID</label>
+                <input type="text" readonly [(ngModel)]="user.uuid" class="form-control py-2" *ngIf="user?.uuid">
+                <input type="text" readonly [(ngModel)]="user.shortuuid" class="form-control py-2"
+                    *ngIf="user?.shortuuid">
+            </div>
+        </div>
+        <div class="row p-1">
+            <div class="col-6 p-2">
+                <button class="w-10 back-btn save-btn" (click)="updateStatus()">Update Status</button>
+            </div>
+            <div class="col-6 p-2" *ngIf="user.state_status ==='New Customer Account Processing'||
+                    user.state_status === 'New Customer Documents Verification Pending From Branch' ||
+                    user.state_status === 'New Customer Documents Not Matched' ||
+                    user.state_status === 'Online New Customer Documents Verification Pending From Branch'">
+                <button class="w-10 back-btn save-btn" (click)="approveApplication(user.state_status)">
+                    Approve Documents
+                </button>
+            </div>
+            <div *ngIf="user.state_status ==='Existing Customer Documents Verification Continue From Branch'"
+                class="p-2">
+                <button class="w-10 back-btn save-btn" (click)="approveExistingAppliction(user.state_status)">Approve
+                    Documents</button>
+            </div>
+            <div *ngIf="user.state_status ==='New Customer Documents Verification Continue From Branch'" class="p-2">
+                <button class="w-10 back-btn save-btn" (click)="approveVerification(user.state_status)">Approve
+                    Documents</button>
+            </div>
+            <div *ngIf="user?.generated_letter !== null" class="p-2">
+                <button class="w-10 back-btn save-btn" (click)="DownloadPdf(user)">Download PDF</button>
+            </div>
+            <div *ngIf="blockedMap[user.state_status] !== undefined" class="p-2">
+                <button class="w-10 back-btn save-btn" *ngIf="blockedMap[user.state_status] !== undefined"
+                    (click)="Unblock(user.state_status,'blockedMap')">Unblock</button>
+            </div>
+            <div *ngIf="user.state_status ==='NBA Verification pending from branch'" class="p-2">
+                <button class="w-10 back-btn save-btn" (click)="ApproveNBA()">Approve NBA</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <table [options]="new_onbording_Options"></table>
+    </div>
+</div>

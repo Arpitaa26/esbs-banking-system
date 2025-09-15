@@ -1,0 +1,43 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.segment-wrapper {
+    display: grid;
+    width: 95%;
+    height: auto;
+    grid-auto-flow: column;
+    margin-top: 3px;
+    justify-self: center;
+}
+
+button {
+    width: 100%;
+    height: 32px;
+    border: none;
+    background-color: #2a8ff726;
+    font-size: 14px;
+    gap: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px !important;
+    cursor: pointer;
+    &.active-button {
+        background: linear-gradient(135deg, #041643, #3E5ADF);
+        color: white;
+    }
+    &.left-rounded {
+        border-top-left-radius: 7px;
+        border-bottom-left-radius: 7px;
+    }
+    &.right-rounded {
+        border-top-right-radius: 7px;
+        border-bottom-right-radius: 7px;
+    }
+}
+
+button:not(:last-child) {
+    border-right: 1px solid #b5d8f870;
+}

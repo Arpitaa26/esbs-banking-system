@@ -1,0 +1,65 @@
+<div class="branch-dashboard soft-panel">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Branches</h1>
+    <button class="add-branch-btn" (click)="addBranch()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"></path>
+      </svg>
+      Add Branch
+    </button>
+  </div>
+
+  <div class="branch-grid">
+    <div class="branch-card" *ngFor="let branch of branches">
+      <div class="branch-header">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2 class="branch-name">{{ branch.name }}</h2>
+          <svg (click)="editBranchName(branch)" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" class="edit-icon">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="branch-body">
+        <div class="branch-info">
+          <div class="info-row">
+            <span class="info-label">Total Cash:</span>
+            <span class="info-value">£{{ (branch.total_balance ?? 0).toFixed(2) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Teller Desktop:</span>
+            <span class="info-value">{{ branch.desktop_count.active }}/{{ branch.desktop_count.total }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Teller Tablet:</span>
+            <span class="info-value">
+              {{ branch.tellerTablet?.current ?? 0 }}/{{ branch.tellerTablet?.total ?? 0 }}
+            </span>
+          </div>
+        </div>
+        <div class="branch-actions">
+          <button class="btn btn-primary" (click)="viewDenominations(branch)">
+            Denominations
+          </button>
+          <button class="btn btn-outline" (click)="viewSafeAndTills(branch)">
+            Safe & Tills
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-no-data *ngIf="!branches || branches.length === 0" [config]="noDataConfig" (buttonClick)="addBranch()">
+  </app-no-data>
+</div>
+
+<app-common-modal [showModal]="showBranchModal" [title]="'Branch Details'" [buttons]="branchButton"
+  (onClose)="closeBranchModal()" (onAction)="saveBranchDetails($event)">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="branchName">Branch Name</label>
+      <input type="text" id="branchName" class="form-control" [(ngModel)]="branch_name" placeholder="Enter branch name">
+    </div>
+  </div>
+</app-common-modal>

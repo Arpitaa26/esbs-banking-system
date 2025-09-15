@@ -1,0 +1,76 @@
+.navbar-comp {
+	background: #FFF;
+	box-shadow: 0px 8px 16px -7px rgba(3, 29, 53, 0.15);
+	height: 70px;
+}
+
+h5 {
+	&.mb-0 {
+		&.nav-head-txt {
+			color: var(--color-text);
+			font-family: var(--font-primary);
+			font-size: var(--font-size-md);
+			font-style: normal;
+			font-weight: 600;
+			line-height: 125%;
+		}
+	}
+}
+
+.profile-img {
+	width: 40px;
+	height: 40px;
+	object-fit: cover;
+	border-radius: var(--radius-lg);
+}
+
+.user-namme {
+	color: var(--color-text);
+	text-align: right;
+	font-family: var(--font-primary);
+	font-size: var(--font-size-sm);
+	font-style: normal;
+	font-weight: 600;
+	line-height: 1;
+}
+
+small {
+	&.profile {
+		color: var(--color-border);
+		text-align: center;
+		font-family: var(--font-primary);
+		font-size: 12px; // Consider defining this in :root if reused
+		font-style: normal;
+		font-weight: 400;
+		line-height: 1;
+	}
+}
+.notification-icon {
+	position: relative;
+	&::after {
+		content: '';
+		background: #00000040;
+		right: -10px;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		height: 100%;
+		    width: 1px;
+        stroke: #B6B6B6;
+	}
+}
+.noti-icon.blink {
+  animation: bell-blink 1s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes bell-blink {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.2);
+    filter: brightness(1.6);
+  }
+}

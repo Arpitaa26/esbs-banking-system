@@ -1,0 +1,11 @@
+
+<div class="segment-wrapper" [ngStyle]="{ 'grid-template-columns': gridTemplateColumns }">
+    <button *ngFor="let btn of segbuttons; let i = index" (click)="onButtonClick(btn)" [ngClass]="{
+      'active-button': btn.functionName === activeFunctionName,
+      'left-rounded': i === 0,
+      'right-rounded': i === segbuttons.length - 1
+    }"
+        [attr.title]="btn?.tooltip" > 
+        {{ btn.name }}
+    </button>
+</div>

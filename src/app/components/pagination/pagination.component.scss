@@ -1,0 +1,70 @@
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+button {
+    padding: 3px 9px;
+    border: none;
+    cursor: pointer;
+    background: #eee;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button.primary {
+    background: linear-gradient(135deg, #041643, #3E5ADF);
+    color: white;
+}
+
+button.secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+button.large {
+    font-size: 1.2rem;
+}
+
+button.small {
+    font-size: 0.75rem;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.center-display {
+    font-weight: bold;
+    text-align: center;
+    background: none;
+}
+
+.pagination-dropdown {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 3px;
+    border: none;
+    background: linear-gradient(135deg, #041643, #3E5ADF);
+    border-radius: 5px;
+    color: white;
+    font-size: smaller;
+    text-align: center;
+    cursor: pointer;
+}
+
+.pagination-dropdown:active {
+    color: white;
+}
+
+option {
+    color: black;
+}
+
+select:focus {
+    outline: none;
+}

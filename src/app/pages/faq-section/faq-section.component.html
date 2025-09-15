@@ -1,0 +1,10 @@
+<div class="w-100 h-100 pb-5">
+    <segment [segbuttons]="segbuttonConfig1"  [segmentTab]="currentTab1" (segbuttonClicked)="seghandleClick1($event)" class="mt-2"></segment>
+    <segment [segbuttons]="segbuttonConfig2" [segmentTab]="currentTab2" (segbuttonClicked)="seghandleClick2($event)" class="mt-2"
+        *ngIf="currentTab1=='faqs_categroy'"></segment>
+    <segment [segbuttons]="segbuttonConfig3" [segmentTab]="currentTab3" (segbuttonClicked)="seghandleClick3($event)" class="mt-2"
+        *ngIf="currentTab1=='faqs'"></segment>
+    <table [options]="faqCategory"
+        *ngIf="(currentTab2=='activeFaqCategory'||'archiveFaqCategory') && currentTab1=='faqs_categroy'" (pageChange)="onPageChangefaqc($event, 1)" (searchFilter)="onSearchfaqc($event, 1)"></table>
+    <table [options]="faq" *ngIf="(currentTab3=='activeFaqs'||'archiveFaqs') && currentTab1=='faqs'" (pageChange)="onPageChangefaq($event, 1)" (searchFilter)="onSearchfaq($event, 2)"></table>
+</div>

@@ -1,0 +1,26 @@
+<div class="customer-container">
+  <div class="search-section">
+    <div class="search-container">
+      <label class="input-label">Mobile Number / Email Address</label>
+      <div class="search-box">
+        <img src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png" class="search-icon-left" alt="delete-icon" />
+        <input type="text" class="search-input" placeholder="Enter Mobile Number or Email" [(ngModel)]="searchValue"
+          (keyup.enter)="searchCustomer()" />
+        <div class="search-svg" (click)="deleteCustomer()">
+         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="70" viewBox="0 0 50 41" fill="none">
+  <path d="M0 -4H55V41H21C9.40202 41 0 31.598 0 20V-4Z" fill="url(#paint0_linear_1133_1725)"/>
+  <path d="M27 18V25M23 18V25M19 14V25.8C19 26.9201 19 27.4798 19.218 27.9076C19.4097 28.2839 19.7155 28.5905 20.0918 28.7822C20.5192 29 21.079 29 22.1969 29H27.8031C28.921 29 29.48 29 29.9074 28.7822C30.2837 28.5905 30.5905 28.2839 30.7822 27.9076C31 27.4802 31 26.921 31 25.8031V14M19 14H21M19 14H17M21 14H29M21 14C21 13.0681 21 12.6024 21.1522 12.2349C21.3552 11.7448 21.7443 11.3552 22.2344 11.1522C22.6019 11 23.0681 11 24 11H26C26.9319 11 27.3978 11 27.7654 11.1522C28.2554 11.3552 28.6447 11.7448 28.8477 12.2349C28.9999 12.6024 29 13.0681 29 14M29 14H31M31 14H33" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs>
+    <linearGradient id="paint0_linear_1133_1725" x1="5.04167" y1="-4" x2="45.6401" y2="42.4337" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#041643"/>
+      <stop offset="1" stop-color="#3E5ADF"/>
+    </linearGradient>
+  </defs>
+</svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-content w-100">
+  </div>
+</div>

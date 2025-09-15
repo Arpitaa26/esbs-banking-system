@@ -1,0 +1,179 @@
+<div class="d-flex justify-content-between align-items-center mx-3 mt-2 p-1 save-bar">
+  <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-4 text-dark back-arrow"></i>
+  <button
+    class="me-4 w-10 back-btn place-self-end save-btn"
+    (click)="save()">
+    <!-- [disabled]="userForm.invalid" -->
+    Save Changes
+  </button>
+</div>
+
+<form #userForm="ngForm" novalidate>
+  <div class="row ms-3 ps-1 pb-5">
+    <div class="col-4 p-3 mt-1 left-card">
+      <div class="row g-3 d-flex ml-3">
+
+        <!-- Platform -->
+        <div class="col-md-12">
+          <label class="form-label">Access Platform</label>
+          <select
+            [(ngModel)]="user.platform"
+            name="platform"
+            required
+            (ngModelChange)="onPlatFormChange($event); changeValidity('plat')"
+            class="form-select py-2"
+            [class.is-invalid]="isFieldsValid.plat && platformCtrl.invalid"
+            #platformCtrl="ngModel">
+            <option [ngValue]="null" disabled>Select the platform to assign</option>
+            <option *ngFor="let item of platform" [ngValue]="item">{{item}}</option>
+          </select>
+          <div *ngIf="isFieldsValid.plat && platformCtrl.invalid" class="invalid-feedback d-block">
+            Platform selection is required.
+          </div>
+        </div>
+
+        <!-- Role Name -->
+        <div class="col-md-12">
+          <label class="form-label">Role Name</label>
+          <select
+            class="form-select py-2"
+            [(ngModel)]="roleid"
+            name="roleid"
+            required
+            (ngModelChange)="onMultiRoleChange($event); changeValidity('role')"
+            [class.is-invalid]="isFieldsValid.role && roleCtrl.invalid"
+            #roleCtrl="ngModel">
+            <option [ngValue]="''" disabled>Select the user role</option>
+            <option *ngFor="let item of roles" [value]="item.role_id">{{item.role_name}}</option>
+          </select>
+          <div *ngIf="isFieldsValid.role && roleCtrl.invalid" class="invalid-feedback d-block">
+            Please select a role.
+          </div>
+          <div class="chip-wrapper" *ngIf="selectedRoles.length">
+            <span class="chip" *ngFor="let role of selectedRoles">
+              {{ role.role_name }}
+              <i class="bi bi-x-circle ms-2 cursor-pointer" (click)="removeRole(role.role_id)"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- Full Name -->
+        <div class="col-md-12">
+          <label class="form-label">Full Name</label>
+          <input
+            type="text"
+            [(ngModel)]="user.full_name"
+            name="full_name"
+            required
+            (ngModelChange)="changeValidity('name')"
+            class="form-control py-2"
+            [class.is-invalid]="isFieldsValid.name && fullNameCtrl.invalid"
+            #fullNameCtrl="ngModel"
+            placeholder="Enter the user's full name">
+          <div *ngIf="isFieldsValid.name && fullNameCtrl.invalid" class="invalid-feedback d-block">
+            Full name is required.
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="col-md-12">
+          <label class="form-label">Email</label>
+          <input
+            type="email"
+            [(ngModel)]="user.emailid"
+            name="emailid"
+            required
+            email
+            class="form-control py-2"
+            (ngModelChange)="changeValidity('email')"
+            [class.is-invalid]="isFieldsValid.email && emailCtrl.invalid"
+            #emailCtrl="ngModel"
+            placeholder="Enter the user's email address">
+          <div *ngIf="isFieldsValid.email && emailCtrl.errors?.['required']" class="invalid-feedback d-block">
+            Email is required.
+          </div>
+          <div *ngIf="isFieldsValid.email && emailCtrl.errors?.['email']" class="invalid-feedback d-block">
+            Please enter a valid email.
+          </div>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="col-md-12">
+          <label class="form-label">Phone Number</label>
+          <input
+            type="number"
+            [(ngModel)]="user.mobileno"
+            name="mobileno"
+            required
+            class="form-control py-2"
+            (ngModelChange)="changeValidity('phn')"
+            [class.is-invalid]="isFieldsValid.phn && mobileCtrl.invalid"
+            #mobileCtrl="ngModel"
+            placeholder="Enter the user's phone number">
+          <div *ngIf="isFieldsValid.phn && mobileCtrl.invalid" class="invalid-feedback d-block">
+            Phone number is required.
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="col-md-12">
+          <label class="form-label">Password</label>
+          <input
+            type="password"
+            [(ngModel)]="user.password"
+            name="password"
+            [required]="isNew"
+            class="form-control py-2"
+            (ngModelChange)="changeValidity('password')"
+            [class.is-invalid]="isFieldsValid.password && passwordCtrl.invalid"
+            #passwordCtrl="ngModel"
+            placeholder="Create a password">
+          <div *ngIf="isFieldsValid.password && passwordCtrl.invalid" class="invalid-feedback d-block">
+            Password is required.
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="col-md-12">
+          <label class="form-label">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control py-2"
+            [(ngModel)]="user.confirmpassword"
+            name="confirmpassword"
+            [required]="isNew"
+            (ngModelChange)="changeValidity('confirmpass')"
+            [class.is-invalid]="isFieldsValid.confirmpass && confirmPasswordCtrl.invalid"
+            #confirmPasswordCtrl="ngModel"
+            placeholder="Re-enter the password">
+          <div *ngIf="isFieldsValid.confirmpass && confirmPasswordCtrl.invalid" class="invalid-feedback d-block">
+            Confirm password is required.
+          </div>
+        </div>
+
+        <!-- Branch -->
+        <div class="col-md-12" *ngIf="user.is_teller">
+          <label class="form-label">Branch</label>
+          <select
+            [(ngModel)]="user.branch_id"
+            name="branch_id"
+            required
+            class="form-select py-2"
+            [class.is-invalid]="clickOnSave && branchCtrl.invalid"
+            #branchCtrl="ngModel">
+            <option [ngValue]="null" disabled>Select the branch</option>
+            <option *ngFor="let branch of branches" [ngValue]="branch.branch_id">{{branch.name}}</option>
+          </select>
+          <div *ngIf="clickOnSave && branchCtrl.invalid" class="invalid-feedback d-block">
+            Branch selection is required.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-8">
+      <table [options]="userOptions"></table>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,213 @@
+<div *ngIf="!valid">
+  <div *ngFor="let m of msg">
+    {{m}}
+  </div>
+</div>
+
+<div *ngIf="valid" class="table-card no-scroll-width">
+  <!-- Header Section -->
+  <div class="row px-1 py-0">
+    <!-- <div class="col-md-6 col-lg-6 col-xl-6 col-sm-12 col-xs-12 col-6"> -->
+    <div class="col" *ngIf="options.search === true">
+      <!-- Search Bar -->
+      <div class="search-box" *ngIf="options.search === true">
+        <img src="https://cdn-icons-png.flaticon.com/512/622/622669.png" class="search-icon-left" alt="search-icon" />
+        <input type="text" class="search-input" placeholder="Search..." [(ngModel)]="options.filter"
+          (input)="searchEvent($event)" />
+        <div class="search-svg">
+          <svg width="41" height="41" viewBox="0 0 60 52" fill="none" xmlns="http://www.w3.org/2000/svg"
+            class="right-radius-svg">
+            <path d="M0 -4H60V56H32C14.3269 56 0 41.6731 0 24V-4Z" fill="url(#paint0_linear_103_946)" />
+            <path
+              d="M40.6191 33.3097L34.439 26.8264L31.2412 30.1787L37.4258 36.662C37.9333 37.194 38.7687 37.194 39.2762 36.662L40.6191 35.2542C41.1267 34.7175 41.1267 33.8371 40.6191 33.3097Z"
+              fill="#FEFDFE" />
+            <path
+              d="M31.3809 28.7333L33.0562 26.9772L31.1474 24.9761C32.9529 22.2501 32.7014 18.474 30.3839 16.0446C27.7834 13.3185 23.557 13.3185 20.952 16.0446C18.3471 18.7706 18.3516 23.2011 20.952 25.9319C23.2696 28.3614 26.8716 28.625 29.4721 26.7323L31.3809 28.7333ZM22.2456 24.5571C20.3592 22.5796 20.3592 19.3733 22.2456 17.4005C24.1319 15.4231 27.1905 15.4231 29.0724 17.4005C30.9588 19.378 30.9588 22.5843 29.0724 24.5571C27.1905 26.5346 24.1319 26.5346 22.2456 24.5571Z"
+              fill="#FEFDFE" />
+            <defs>
+              <linearGradient id="paint0_linear_103_946" x1="5.5" y1="-4" x2="60" y2="47"
+                gradientUnits="userSpaceOnUse">
+                <stop stop-color="#041643" />
+                <stop offset="1" stop-color="#3E5ADF" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-md-6 col-lg-6 col-xl-6 col-sm-12 col-xs-12 col-6"> -->
+    <div class="col" *ngIf="options.download">
+      <!-- Download Section -->
+      <div *ngIf="options.download" class="download-container p-2 d-flex justify-content-end">
+
+        <!-- Upload Button (if needed) -->
+        <app-upload-button *ngIf="options.uploadOptions.btnCallback" [options]="options.uploadOptions"
+          class="upload-button">
+        </app-upload-button>
+
+        <!-- Download Buttons -->
+        <button (click)="downloadCsv()" class="download-button">
+          <div *ngIf="downloadLoader?.csv" class="download-spinner"></div>
+          <span *ngIf="!downloadLoader?.csv">Download CSV File</span>
+        </button>
+
+        <button (click)="downloadJson()" class="download-button">
+          <div *ngIf="downloadLoader?.json" class="download-spinner"></div>
+          <span *ngIf="!downloadLoader?.json">Download JSON</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls Section -->
+  <div class="controls-container">
+    <div class="controls-row d-flex mb-1">
+      <!-- Selected Actions -->
+      <div class="selected-actions" *ngIf="selectedCount > 0">
+        <span class="selected-count">Selected: {{selectedCount}}</span>
+        <button *ngFor="let action of options.selectedActions" (click)="selectedAction(action)"
+          [style.background]="action.color || ''" class="action-button">
+          {{action.title}}
+        </button>
+      </div>
+
+      <!-- Custom Buttons -->
+      <button *ngIf="options.button1.buttonTitle" (click)="options.button1.buttonAction(null)" class="custom-button">
+        {{options.button1.buttonTitle}}
+      </button>
+
+      <button *ngIf="options.button2.buttonTitle" (click)="options.button2.buttonAction(null)" class="custom-button">
+        {{options.button2.buttonTitle}}
+      </button>
+
+      <!-- Filter Clear -->
+      <!-- <div *ngIf="options.filter" class="filter-clear align-content-center">
+        <span class="searched-content-item">Showing: Status {{options.filter}}</span>
+        <button (click)="clearFilter()" class="clear-button">
+          Clear
+        </button>
+      </div> -->
+
+      <!-- Add Button -->
+      <button *ngIf="options.add.addActionTitle" (click)="options.add.addAction(null)" class="add-button">
+        {{options.add.addActionTitle}}
+      </button>
+
+      <!-- All Actions -->
+      <div *ngIf="options.allActions.length > 0" class="all-actions">
+        <button *ngFor="let action of options.allActions" (click)="allAction(action)"
+          [style.background]="action.color || ''" class="action-button">
+          {{action.title}}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-container">
+    <!-- Table Header -->
+    <div class="table-header">
+      <!-- Select All Checkbox -->
+      <div class="header-cell select-cell col-1" *ngIf="options.select">
+        <label>All</label>
+        <input type="checkbox" [(ngModel)]="selectAllRecords" (change)="selectAll()">
+      </div>
+
+      <!-- Column Headers -->
+      <div *ngFor="let key of columnKeys" class="header-cell" [style.flex]="getColumnFlex(key)"
+        (click)="sortClicked(key)" [title]="options.columns[key].tooltip || options.columns[key].title"
+        [class]="getColumnClass(key)">
+        <span>{{options.columns[key].title}}</span>
+        <span *ngIf="sortColumns[key] > 0" class="sort-icon ms-2">↑</span>
+        <span *ngIf="sortColumns[key] < 0" class="sort-icon ms-2">↓</span>
+        <span *ngIf="options.columns[key].search" class="search-icon ms-2">🔍</span>
+      </div>
+
+      <!-- Actions Header -->
+      <div *ngIf="options.rowActions.length > 0" class="header-cell actions-cell">
+        <span>Actions</span>
+      </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div *ngIf="options.loading" class="loading-indicator">
+      <div class="spinner"></div>
+      <div>Loading Please Wait...</div>
+    </div>
+
+    <!-- Table Body - Normal Mode -->
+    <div *ngIf="!options.loading && !options.groupColumn" class="table-body">
+      <div *ngFor="let item of pageData; let i = index" class="table-row" [ngClass]="getRowClasses(item)">
+
+        <!-- Row Select Checkbox -->
+        <div class="table-cell select-cell col-1" *ngIf="options.select">
+          <input type="checkbox"
+            [(ngModel)]="options.filteredData[options.serverMode ? i : (paginationInfo.page-1)*paginationInfo.pageSize+i].selected"
+            (change)="selectRecord($event, i)">
+        </div>
+
+        <!-- Data Cells -->
+        <div *ngFor="let key of columnKeys" class="table-cell" [style.flex]="getColumnFlex(key)"
+          (click)="options.tapRow && !options.columns[key].disableTapRow && options.tapRow(item)"
+          [class]="getColumnClass(key)">
+          <div [innerHTML]="getValue(item[key], options.columns[key].format, options.columns[key], item)"></div>
+        </div>
+
+        <!-- Row Actions -->
+        <div *ngIf="options.rowActions.length > 0" class="table-cell actions-cell">
+          <button *ngFor="let action of options.rowActions" (click)="rowAction(action, item)"
+            [style.background]="getColor(action.color, item, action)" class="row-action-button">
+            {{setDynamicButtonTitle(action, item)}}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Body - Group Mode -->
+    <div *ngIf="!options.loading && options.groupColumn" class="table-body">
+      <div *ngFor="let item of pageData; let i = index" class="table-row" [ngClass]="getRowClasses(item)">
+
+        <!-- Group Header -->
+        <div *ngIf="item.groupColumndata" class="group-header">
+          {{item.groupColumndata}}
+        </div>
+
+        <!-- Row Content -->
+        <div *ngIf="!item.groupColumndata" class="row-content">
+          <!-- Row Select Checkbox -->
+          <div class="table-cell select-cell col-1" *ngIf="options.select">
+            <input type="checkbox"
+              [(ngModel)]="options.filteredData[options.serverMode ? i : (paginationInfo.page-1)*paginationInfo.pageSize+i].selected"
+              (change)="selectRecord($event, i)">
+          </div>
+
+          <!-- Data Cells -->
+          <div *ngFor="let key of filterGroupColumn(columnKeys, item)" class="table-cell"
+            [style.flex]="getColumnFlex(key)" (click)="!options.columns[key].disableTapRow && options.tapRow(item)"
+            [class]="getColumnClass(key)">
+            <div [innerHTML]="getValue(item[key], options.columns[key].format, options.columns[key], item)"></div>
+          </div>
+
+          <!-- Row Actions -->
+          <div *ngIf="options.rowActions.length > 0" class="table-cell actions-cell">
+            <button *ngFor="let action of options.rowActions" (click)="rowAction(action, item)"
+              [style.background]="getColor(action.color, item, action)" class="row-action-button">
+              {{setDynamicButtonTitle(action, item)}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Table Footer-->
+    <div class="table-footer w-90 m-2" *ngIf="options.pagination">
+      <!-- Pagination -->
+      <app-pagination *ngIf="options.pagination" (pageChange)="changePage($event)"
+        (pageSizeChanged)="pageSizeChanged($event)" (clickNext)="onNextPage()" (clickPrevious)="onPreviousPage()"
+        (clickBeginning)="onFirstPage()" (clickEnd)="onLastPage()" [pagination]="paginationInfo"
+        class="pagination justify-content-end">
+      </app-pagination>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<form [formGroup]="formConfigForm" class="form-builder-container soft-panel">
+      <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/external-link-menu" routerLinkActive="router-link-active">External Link Menu</a></li>
+      <li class="breadcrumb-item active" aria-current="page">External Link Edit</li>
+    </ol>
+  </nav>
+  <div class="form-config-section">
+    <h2 class="section-title">{{formTitle}}</h2>
+
+    <div class="config-row">
+      <!-- Title -->
+      <div class="config-group">
+        <label class="config-label">Title *</label>
+        <input
+          type="text"
+          class="config-input"
+          formControlName="title"
+          placeholder="Enter title" />
+        <small *ngIf="f['title'].touched && f['title'].invalid" class="text-danger">
+          Title is required
+        </small>
+      </div>
+
+      <!-- Status -->
+      <div class="config-group">
+        <label class="config-label">Status</label>
+        <div class="toggle-switch">
+          <input
+            type="checkbox"
+            id="status-toggle"
+            formControlName="status"
+            class="toggle-input" />
+          <label for="status-toggle" class="toggle-label"></label>
+        </div>
+      </div>
+
+      <!-- Link -->
+      <div class="config-group">
+        <label class="config-label">Link *</label>
+        <input
+          type="text"
+          class="config-input"
+          formControlName="link"
+          placeholder="Enter link" />
+        <small *ngIf="f['link'].touched && f['link'].errors?.['required']" class="text-danger">
+          Link is required
+        </small>
+        <small *ngIf="f['link'].touched && f['link'].errors?.['pattern']" class="text-danger">
+          Enter a valid URL
+        </small>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="config-group full-width">
+      <label class="config-label">Description *</label>
+      <textarea
+        class="config-textarea"
+        formControlName="description"
+        placeholder="Enter description"
+        rows="3"></textarea>
+      <small *ngIf="f['description'].touched && f['description'].invalid" class="text-danger">
+        Description is required
+      </small>
+    </div>
+
+    <!-- Save Button -->
+    <div class="modal-footer">
+      <button class="add-field-submit-btn" type="button" (click)="saveEditedField()">
+        Save
+      </button>
+    </div>
+  </div>
+</form>
+

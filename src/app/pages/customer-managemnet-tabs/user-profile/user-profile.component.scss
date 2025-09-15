@@ -1,0 +1,45 @@
+
+.form-label {
+  font-family: 'Nunito', sans-serif;
+  color: #083A50;
+  font-weight: 500;
+}
+
+.select-box {
+  max-width: 80px;
+  border-radius: 10px 10px 10px 10px;
+  border-right: 0;
+   margin-right: 10px; 
+}
+ .phone-input {
+  border-radius: 0 10px 10px 0;
+}
+
+.btn-custom {
+  background-color: red;
+  transition: all 0.3s ease;
+  &:hover {
+    background-color: #910329;
+  }
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.modal-box {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}

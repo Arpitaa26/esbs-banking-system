@@ -1,0 +1,32 @@
+<div class="modal-overlay" *ngIf="showModal" (click)="handleButtonClick('close')">
+  <div
+    class="modal-container"
+    (click)="$event.stopPropagation()"
+    [ngStyle]="{
+      'max-width': width || null,
+    }"
+  >
+    <div class="modal-header">
+      <h3 class="modal-title">{{ title }}</h3>
+      <button class="modal-close" (click)="handleButtonClick('close')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body" [ngStyle]="{
+      'max-height': height || null
+    }">
+      <ng-content></ng-content>
+    </div>
+
+    <div class="modal-footer">
+      <button *ngFor="let btn of buttons" [ngClass]="btn.class" [style.color]="btn.textColor || null"
+        [style.backgroundColor]="btn.backgroundColor || null" (click)="handleButtonClick(btn.action)">
+        <i *ngIf="btn.icon" [class]="btn.icon" class="me-1"></i>
+        {{ btn.label }}
+      </button>
+    </div>
+  </div>
+</div>

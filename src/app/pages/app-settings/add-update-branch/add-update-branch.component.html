@@ -1,0 +1,143 @@
+<div class="d-flex justify-content-between align-items-center mx-3 mt-2 p-1 save-bar">
+  <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-4 text-dark back-arrow"></i>
+  <button class="me-4 w-10 back-btn place-self-end save-btn" (click)="save()">Save Changes</button>
+</div>
+
+<div class="row mx-3 ps-1 pb-5">
+  <div class="col-12 p-3 mt-1 left-card">
+    <div class="row g-3 d-flex ml-3">
+      <div class="col-md-12">
+        <h4 class="mb-3">Branch Information</h4>
+      </div>
+
+      <div class="col-md-6 col-sm-12">
+        <label class="form-label">Branch Name <span class="text-danger">*</span></label>
+        <input type="text" [(ngModel)]="branch.name" class="form-control py-2" required #branchName="ngModel">
+        <div *ngIf="branchName.invalid && branchName.touched" class="text-danger">
+          Branch Name is required
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12">
+        <label class="form-label">Address Line 1 <span class="text-danger">*</span></label>
+        <input type="text" [(ngModel)]="branch.address_line1" class="form-control py-2" required
+          #addressLine1="ngModel">
+        <div *ngIf="addressLine1.invalid && addressLine1.touched" class="text-danger">
+          Address Line 1 is required
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12">
+        <label class="form-label">Address Line 2 <span class="text-danger">*</span></label>
+        <input type="text" [(ngModel)]="branch.address_line2" class="form-control py-2" required
+          #addressLine2="ngModel">
+        <div *ngIf="addressLine2.invalid && addressLine2.touched" class="text-danger">
+          Address Line 2 is required
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12">
+        <label class="form-label">Address Line 3</label>
+        <input type="text" [(ngModel)]="branch.address_line3" class="form-control py-2">
+      </div>
+
+      <div class="col-md-6 col-sm-12">
+        <label class="form-label">Address Line 4</label>
+        <input type="text" [(ngModel)]="branch.address_line4" class="form-control py-2">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Branch Telephone <span class="text-danger">*</span></label>
+        <input type="text" [(ngModel)]="branch.tel" class="form-control py-2" required #branchTel="ngModel"
+          (keyup)="validatePhoneNumber()">
+        <div *ngIf="branchTel.invalid && branchTel.touched" class="text-danger">
+          Branch Telephone is required
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Branch Fax</label>
+        <input type="text" [(ngModel)]="branch.fax" class="form-control py-2" #branchFax="ngModel"
+          (keyup)="validateFaxNumber()">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Branch Email <span class="text-danger">*</span></label>
+        <input type="email" [(ngModel)]="branch.email" class="form-control py-2" required email #branchEmail="ngModel">
+        <div *ngIf="branchEmail.invalid && branchEmail.touched" class="text-danger">
+          Valid Branch Email is required
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Postal Code <span class="text-danger">*</span></label>
+        <input type="text" [(ngModel)]="branch.postalcode" class="form-control py-2" (keyup)="postcode_validate()"
+          required #postalCode="ngModel">
+        <div *ngIf="postalCode.invalid && postalCode.touched" class="text-danger">
+          Postal Code is required
+        </div>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <h4 class="mb-3">Opening Hours <span class="text-danger">*</span></h4>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Days</th>
+                <th>Hours</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let hour of branch.opening_hours; let i = index">
+                <td>{{ hour.day }}</td>
+                <td>{{ hour.hours }}</td>
+                <td class="text-center">
+                  <i class="bi bi-trash text-danger" role="button" (click)="deleteOpeningHour(i)"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="text" [(ngModel)]="newOpeningDay" class="form-control" placeholder="Enter Day or Days">
+                </td>
+                <td>
+                  <input type="text" [(ngModel)]="newOpeningHours" class="form-control" placeholder="Enter Hours">
+                </td>
+                <td>
+                  <button type="button" class="btn btn-custom" (click)="addOpeningHour()">Add Days & Hours</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <h4 class="mb-3">Branch Map</h4>
+        <iframe *ngIf="mapUrl" width="100%" height="300" frameborder="0" style="border:0" [src]="mapUrl" allowfullscreen
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+      <div class="col-md-6 col-sm-12">
+        <label class="form-label">Latitude <span class="text-danger">*</span></label>
+        <input type="text" [(ngModel)]="branch.latitude" (ngModelChange)="updateMapUrlFromAddress()"
+          class="form-control py-2" required #latitude="ngModel">
+        <div *ngIf="latitude.invalid && latitude.touched" class="text-danger">
+          Latitude is required
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12">
+        <label class="form-label">Longitude <span class="text-danger">*</span></label>
+        <input type="text" [(ngModel)]="branch.longitude" (ngModelChange)="updateMapUrlFromAddress()"
+          class="form-control py-2" required #longitude="ngModel">
+        <div *ngIf="longitude.invalid && longitude.touched" class="text-danger">
+          Longitude is required
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

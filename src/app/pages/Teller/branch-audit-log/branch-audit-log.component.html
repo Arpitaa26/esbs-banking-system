@@ -1,0 +1,164 @@
+<div class="branch-audit-logs soft-panel">
+  <div class="breadcrumb">
+    <div class="breadcrumb-nav">
+      <button class="breadcrumb-link" (click)="goBack('head-office-branch-view')">Branches</button>
+      <span class="breadcrumb-separator">></span>
+      <button class="breadcrumb-link" (click)="goBack('branch-view' , branchData.branch_id)">{{ branchData.name ||
+        'Branch' }}</button>
+      <span class="breadcrumb-separator">></span>
+      <span class="breadcrumb-current">{{ 'Audit Log' }}</span>
+    </div>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <!-- First Row - Activity, Activity Status, Search -->
+    <div class="filters-row">
+      <!-- Activity Dropdown -->
+      <div class="filter-group">
+        <label for="activity">Activity</label>
+        <div class="dropdown-container">
+          <div class="dropdown-select" (click)="toggleDropdown('activity')">
+            <span class="dropdown-placeholder">{{ selectedActivities.length ? selectedActivities.length + ' Selected' :
+              'Select Activity' }}</span>
+            <span class="dropdown-arrow">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6,9 12,15 18,9" />
+              </svg>
+            </span>
+          </div>
+          <div class="dropdown-menu" *ngIf="openDropdown === 'activity'">
+            <div class="dropdown-item" *ngFor="let activity of activityList">
+              <label class="checkbox-container">
+                <input type="checkbox" [checked]="isActivitySelected(activity.tel_activity_master_id)"
+                  (change)="toggleActivity(activity)" (click)="$event.stopPropagation()">
+                <span class="checkbox-label">{{ activity.activity_name }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Status Dropdown -->
+      <div class="filter-group">
+        <label for="activityStatus">Activity Status</label>
+        <div class="dropdown-container">
+          <div class="dropdown-select" (click)="toggleDropdown('status')">
+            <span class="dropdown-placeholder">{{ selectedStatuses.length ? selectedStatuses.length + ' Selected' :
+              'Select Status' }}</span>
+            <span class="dropdown-arrow">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6,9 12,15 18,9" />
+              </svg>
+            </span>
+          </div>
+          <div class="dropdown-menu" *ngIf="openDropdown === 'status'">
+            <div class="dropdown-item" *ngFor="let status of activityStatusList">
+              <label class="checkbox-container">
+                <input type="checkbox" [checked]="isStatusSelected(status.tel_activity_status_id)"
+                  (change)="toggleStatus(status)" (click)="$event.stopPropagation()">
+                <span class="checkbox-label">{{ status.activity_status }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Text -->
+      <div class="filter-group">
+        <label for="searchText">Search</label>
+        <input id="searchText" type="text" class="filter-input" placeholder="Search Activity Name"
+          [(ngModel)]="searchTerm" (keyup.enter)="applyFilters()" />
+      </div>
+    </div>
+
+    <!-- Second Row - Date Filters -->
+    <div class="filters-row-second">
+      <!-- From Date -->
+      <div class="filter-group">
+        <label for="fromDate">From Date</label>
+        <input id="fromDate" type="date" class="filter-input date-input" placeholder="dd-mm-yyyy" [(ngModel)]="fromDate"
+          (change)="onFromDateChange()" />
+      </div>
+
+      <div class="filter-group">
+        <label for="toDate">To Date</label>
+        <input id="toDate" type="date" class="filter-input date-input" placeholder="dd-mm-yyyy" [(ngModel)]="toDate"
+          [min]="fromDate || today" />
+      </div>
+
+    </div>
+
+    <!-- Selected Filters Display -->
+    <div class="selected-filters" *ngIf="selectedActivities.length > 0 || selectedStatuses.length > 0">
+      <div class="filter-chips">
+        <div class="filter-chip" *ngFor="let activity of selectedActivities">
+          <span>{{ activity.activity_name }}</span>
+          <button class="chip-remove" (click)="removeActivity(activity.tel_activity_master_id)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="filter-chip" *ngFor="let status of selectedStatuses">
+          <span>{{ status.activity_status }}</span>
+          <button class="chip-remove" (click)="removeStatus(status.tel_activity_status_id)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons Row -->
+    <div class="action-buttons-row">
+      <div class="filter-actions">
+        <button class="search-btn" (click)="applyFilters()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          Search
+        </button>
+        <button class="clear-btn" (click)="clearFilters()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18" />
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+            <line x1="10" x2="10" y1="11" y2="17" />
+            <line x1="14" x2="14" y1="11" y2="17" />
+          </svg>
+          Clear
+        </button>
+      </div>
+
+      <div class="download-buttons">
+        <button class="download-btn" (click)="downloadJSON()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7,10 12,15 17,10" />
+            <line x1="12" x2="12" y1="15" y2="3" />
+          </svg>
+          Download JSON
+        </button>
+        <button class="download-btn" (click)="downloadCSV()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7,10 12,15 17,10" />
+            <line x1="12" x2="12" y1="15" y2="3" />
+          </svg>
+          Download CSV
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <app-dynamic-table [data]=" auditData" [columns]="tableColumns" [withCheckbox]="false"
+    [rowsPerPage]="itemsPerPage" [enablePagination]="true" [dataCount]="dataCount" (pageChange)="goToPage($event)"
+    (pageSizeChange)="onPageSizeChanged($event)">
+  </app-dynamic-table>
+</div>

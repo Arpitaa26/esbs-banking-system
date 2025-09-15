@@ -1,0 +1,146 @@
+<div class="d-flex align-items-center mx-3 mt-2 p-1 save-bar">
+  <i (click)="back()" class="bi bi-chevron-left fw-bolder fs-4 text-dark back-arrow"></i>
+  <div *ngIf="!isReadOnly" class="d-flex place-self-end justify-content-end w-100">
+    <button *ngIf="!showSaveChanges" class="me-4 w-10 back-btn place-self-end save-btn" (click)="saveChanges()">
+      Save Changes
+    </button>
+    <button *ngIf="showSaveChanges" class="me-4 w-10 back-btn place-self-end save-btn" (click)="saveChanges()">
+      Save Changes
+    </button>
+  </div>
+  <div *ngIf="isReadOnly" class="d-flex justify-content-between w-100">
+    <div *ngIf="showAuthoriserButtons" class="ms-auto d-flex">
+      <button (click)="approveAsAuthoriser()" class="btn btn-success rounded-2 me-2">Authoriser Approved</button>
+      <button (click)="rejectAsAuthoriser()" class="btn btn-danger">Authoriser Rejected</button>
+    </div>
+    <div *ngIf="showComplianceButtons" class="ms-auto d-flex">
+      <button (click)="approveAsCompliance()" class="btn btn-success rounded-2 me-2">Compliance Approved</button>
+      <button (click)="rejectAsCompliance()" class="btn btn-danger">Compliance Rejected</button>
+    </div>
+  </div>
+</div>
+<div class="row px-3 pb-4">
+  <div class="col-lg-6 col-md-12">
+    <div class="col-12 p-3 mt-1 left-card">
+      <div class="mb-3">
+        <label class="form-label">Title <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" [(ngModel)]="message.title" placeholder="Title"
+          (input)="changeValidity('title'); updatePreview()" [readonly]="isReadOnly"
+          [ngClass]="{'is-invalid': !isFieldsValid.title && clickOnSave}" />
+        <div class="invalid-feedback" *ngIf="!isFieldsValid.title && clickOnSave">
+          Title is required
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Body <span class="text-danger">*</span></label>
+        <div id="editor-container" style="min-height: 150px; background: white;" [class.readonly]="isReadOnly"
+          [ngClass]="{'border border-danger': !isFieldsValid.body && clickOnSave}"></div>
+        <small class="text-muted">Note: You can use HTML Tags in the body</small>
+        <div class="text-danger mt-1" *ngIf="!isFieldsValid.body && clickOnSave">
+          Body is required
+        </div>
+      </div>
+
+      <div class="card mt-2">
+        <div class="card-header fw-bold">Action Buttons</div>
+        <div class="card-body">
+          <ng-container *ngIf="message.actions?.length > 0; else noActions">
+            <div *ngFor="let action of message.actions; let i = index"
+              class="mb-3 border-bottom pb-2 d-flex justify-content-between align-items-start">
+              <div>
+                <div><strong>{{ action.title }}</strong></div>
+                <div class="text-muted small">{{ action.type }}</div>
+                <div *ngIf="action.type === 'URL'" class="text-primary small">
+                  <a [href]="action.value" target="_blank" rel="noopener">{{ action.value }}</a>
+                </div>
+                <div *ngIf="action.type !== 'URL'" class="small">{{ action.value }}</div>
+              </div>
+              <div>
+                <div *ngIf="!isReadOnly">
+                  <i class="bi bi-pencil-square text-success me-3 cursor-pointer" (click)="editAction(i)"></i>
+                  <i class="bi bi-trash text-danger cursor-pointer" (click)="deleteAction(i)"></i>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #noActions>
+            <div class="text-muted">No action buttons added yet.</div>
+          </ng-template>
+          <button class="btn btn-primary mt-2" (click)="openActionModal()" *ngIf="!isReadOnly">Add Action</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6 col-md-12">
+    <div class="col-12 right-card mt-1">
+      <div class="card m-3">
+        <div class="card-header text-center">Live Message Preview</div>
+        <div class="card-body">
+          <segment [segbuttons]="segbuttonConfig" (segbuttonClicked)="seghandleClick($event)" class="my-2"></segment>
+          <div class="preview-container">
+            <div class="device-container">
+              <div class="device-frame iphone-frame mx-auto" *ngIf="deviceType === 'ios'">
+                <div class="device-notch">
+                  <div class="speaker"></div>
+                  <div class="camera"></div>
+                </div>
+                <div class="dynamic-island"></div>
+                <iframe [srcdoc]="previewHtml" frameborder="0" class="device-screen"></iframe>
+                <div class="side-button right"></div>
+                <div class="side-button left"></div>
+                <div class="volume-buttons"></div>
+                <div class="bottom-notch"></div>
+              </div>
+              <div class="device-frame android-frame" *ngIf="deviceType === 'android'">
+                <div class="punch-hole-camera"></div>
+                <iframe [srcdoc]="previewHtml" frameborder="0" class="device-screen"></iframe>
+                <div class="volume-buttons">
+                  <div class="side-button"></div>
+                  <div class="side-button"></div>
+                </div>
+                <div class="power-button"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop" *ngIf="showActionModal"></div>
+<div class="action-modal" *ngIf="showActionModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5>{{ editIndex !== null ? 'Edit Action' : 'Add Action' }}</h5>
+      <button class="btn-close" (click)="closeActionModal()"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mb-2">
+        <label>Title</label>
+        <input [(ngModel)]="actionForm.title" class="form-control" placeholder="Action Title" />
+      </div>
+      <div class="mb-2">
+        <label>Type</label>
+        <select [(ngModel)]="actionForm.type" class="form-control">
+          <option value="">Select Type</option>
+          <option value="URL">URL</option>
+          <option value="Call Number">Call Number</option>
+          <option value="Call Back">Call Back</option>
+        </select>
+      </div>
+      <div class="mb-2" *ngIf="actionForm.type && actionForm.type !== 'Call Back'">
+        <label>{{ actionForm.type }} Value</label>
+        <input [(ngModel)]="actionForm.value" class="form-control" placeholder="Enter value"
+          [attr.pattern]="actionForm.type === 'Call Number' ? '^[0-9]{10}$' : null"
+          [attr.maxlength]="actionForm.type === 'Call Number' ? 10 : null"
+          [attr.inputmode]="actionForm.type === 'Call Number' ? 'numeric' : null" (keypress)="allowOnlyNumbers($event)"
+          (focus)="showNumberHint()" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeActionModal()">Cancel</button>
+      <button class="btn btn-primary" (click)="addAction()">Save</button>
+    </div>
+  </div>
+</div>
